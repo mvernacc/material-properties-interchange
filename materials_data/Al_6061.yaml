@@ -1,0 +1,70 @@
+name: Al 6061
+category: metal
+subcategory: Aluminum alloy
+uns_code: A96061
+
+references:    # In bibtex format
+  - |
+    @techreport{mmpds01,
+      author = {Richard C Rice and Jana L Jackson and John Bakuckas and Steven Thompson},
+      title = {Meteallic Materials Properties Development and Standardization (MMPDS)},
+      institution = {U.S. Department of Transportation, Federal Aviation Administration},
+      year = {2001},
+    }
+  - |
+    @online{matwebAl6061,
+      author = {{MatWeb, LLC}},
+      title = {Aluminum 6061-T6; 6061-T651},
+      year = {2019},
+      url = {http://www.matweb.com/search/DataSheet.aspx?MatGUID=b8d536e0b9b54bd7b69e4124d8f1d20a&ckck=1}
+    }
+
+
+common_properties: &common_properties
+  youngs_modulus:    # Example of a state-dependent property
+    units: GPa
+    default_value: 68.3
+    variation_with_state:
+      state_vars: ['temperature']
+      value_type: multiplier    # multiplier or override
+      representation: table    # tables for now, may add NIST polynomials later
+      temperature: [78.37, 110.7 , 144.1 , 171.4 , 199.5 , 232.6 , 255.8 , 286.9 , 316.5 , 344.6 , 366.7 , 395.5 , 419.1 , 438.8 , 457.8 , 477.6 , 500.8 , 521.7 , 541.4 , 561.6 , 575.6 , 589.7 ]
+      values: [1.126 , 1.103 , 1.079 , 1.063 , 1.046 , 1.029 , 1.019 , 1.008 , 1.    , 0.9928, 0.9881, 0.9787, 0.9646, 0.9485, 0.9284, 0.9042, 0.8714, 0.8351, 0.7989, 0.7587, 0.7298, 0.703 ] 
+    reference: mmpds01    # bibtex tag
+
+  solidus_temperature:   # Example of a "simple" (not state-dependent) property
+    units: kelvin
+    default_value: 855.
+    reference: matwebAl6061
+
+common_state_variations:    # State variations that are common between forms or conditions.
+  T6_tensile_ultimate_strength: &T6_tensile_ultimate_strength
+    state_vars: ['exposure time', 'temperature']
+    value_type: multiplier
+    representation: table
+    'exposure time':    # units: hours
+      0.5:
+        temperature: [TODO]
+        values: [TODO]
+      10.:
+        temperature: [TODO]
+        values: [TODO]
+
+
+forms:
+  'extruded, thickness > 1 inch':
+    conditions:
+      T6:
+        properties:
+          <<: *common_properties
+          tensile_ultimate_strength:
+            units: ksi
+            value: 33    # in the weakest (LT) direction
+            basis: A
+            variation_with_state:
+              <<: *T6_tensile_ultimate_strength
+
+
+  forged:
+    
+
