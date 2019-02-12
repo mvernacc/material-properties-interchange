@@ -1,4 +1,4 @@
-"""classes for representing and quesrying properties of a material."""
+"""classes for representing and querying properties of a material."""
 import numpy as np
 import scipy.interpolate
 
@@ -8,6 +8,9 @@ class Property:
         self.default_value = yaml_dict['default_value']
         self.units = yaml_dict['units']
         self.reference = yaml_dict['reference']
+
+    def query_value(self):
+        return self.default_value
 
 
 class StateDependentProperty(Property):
