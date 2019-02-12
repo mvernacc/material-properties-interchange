@@ -39,18 +39,18 @@ common_properties: &common_properties
     reference: matwebAl6061
 
 common_state_variations:    # State variations that are common between forms or conditions.
-  T6_tensile_ultimate_strength: &T6_tensile_ultimate_strength
+  T6_strength_tensile_ultimate: &T6_strength_tensile_ultimate
     state_vars: ['exposure time', 'temperature']
     state_vars_units: ['kelvin', 'hours']    # TODO use log(hours) instead?
     value_type: multiplier
     representation: table
     'exposure time':    # units: hours
       0.5:
-        temperature: [TODO]
-        values: [TODO]
+        temperature: [300]    # TODO
+        values: [1]    # TODO
       10.:
-        temperature: [TODO]
-        values: [TODO]
+        temperature: [300]    # TODO
+        values: [1]    # TODO
 
 
 forms:
@@ -59,14 +59,13 @@ forms:
       T6:
         properties:
           <<: *common_properties
-          tensile_ultimate_strength:
+          strength_tensile_ultimate:
             units: ksi
-            value: 33    # in the weakest (LT) direction
+            default_value: 33    # in the weakest (LT) direction
             basis: A
+            reference: mmpds01
             variation_with_state:
-              <<: *T6_tensile_ultimate_strength
-
+              <<: *T6_strength_tensile_ultimate
 
   forged:
     
-
