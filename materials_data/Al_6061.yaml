@@ -26,6 +26,7 @@ common_properties: &common_properties
     default_value: 68.3
     variation_with_state:
       state_vars: ['temperature']
+      state_vars_units: ['kelvin']
       value_type: multiplier    # multiplier or override
       representation: table    # tables for now, may add NIST polynomials later
       temperature: [78.37, 110.7 , 144.1 , 171.4 , 199.5 , 232.6 , 255.8 , 286.9 , 316.5 , 344.6 , 366.7 , 395.5 , 419.1 , 438.8 , 457.8 , 477.6 , 500.8 , 521.7 , 541.4 , 561.6 , 575.6 , 589.7 ]
@@ -40,6 +41,7 @@ common_properties: &common_properties
 common_state_variations:    # State variations that are common between forms or conditions.
   T6_tensile_ultimate_strength: &T6_tensile_ultimate_strength
     state_vars: ['exposure time', 'temperature']
+    state_vars_units: ['kelvin', 'hours']    # TODO use log(hours) instead?
     value_type: multiplier
     representation: table
     'exposure time':    # units: hours
