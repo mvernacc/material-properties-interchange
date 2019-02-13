@@ -21,6 +21,10 @@ class StateDependentProperty(Property):
         self.state_vars_units = yaml_dict['variation_with_state']['state_vars_units']
         self._value_type = yaml_dict['variation_with_state']['value_type']
         self._representation = yaml_dict['variation_with_state']['representation']
+        if 'state_vars_interp_scales' in yaml_dict['variation_with_state']:
+            self._state_vars_interp_scales = yaml_dict['variation_with_state']['state_vars_interp_scales']
+        else:
+            self._state_vars_interp_scales = ['linear'] * len(self.state_vars)
 
         if self._representation == 'table':
             if len(self.state_vars) == 1:
@@ -28,6 +32,8 @@ class StateDependentProperty(Property):
                     yaml_dict['variation_with_state'][self.state_vars[0]])
                 self._interp_values = np.array(
                     yaml_dict['variation_with_state']['values'])
+                if self._state_vars_interp_scales[0] == 'log':
+                    self._interp_points = np.log(self._interp_points)
             elif len(self.state_vars) == 2:
                 # TODO there has got to be a less awful way to represent a 2+ dimensional
                 # interpolation table in YAML and load it.
@@ -41,7 +47,7 @@ class StateDependentProperty(Property):
                 # From the yaml dictionary 2d table, build an array compatible with
                 # scipy.interpolate.griddata
                 for i in range(len(interp_points_0)):
-                    # The value of the 0th state variable for this slice of the inperpolation table.
+                    # The value of the 0th state variable for this slice of the interpolation table.
                     point_0 = interp_points_0[i]
                     self._interp_points = np.append(
                         self._interp_points,
@@ -53,6 +59,9 @@ class StateDependentProperty(Property):
                             axis=1),
                         axis=0)
                     self._interp_values = np.append(self._interp_values, tbl_dict[point_0]['values'])
+                for j in range(2):
+                    if self._state_vars_interp_scales[j] == 'log':
+                        self._interp_points[:, j] = np.log(self._interp_points[:, j])
             else:
                 raise NotImplementedError('More than two state variables not supported.')
 
@@ -77,6 +86,8 @@ class StateDependentProperty(Property):
         # Form an array of points at which to query the interpolation.
         if len(self.state_vars) == 1:
             query_points = np.array(state[self.state_vars[0]])
+            if self._state_vars_interp_scales[0] == 'log':
+                    query_points = np.log(query_points)
         elif len(self.state_vars) == 2:
             if hasattr(state[self.state_vars[0]], '__len__') \
             and hasattr(state[self.state_vars[1]], '__len__'):
@@ -85,6 +96,11 @@ class StateDependentProperty(Property):
                     (state[self.state_vars[0]], state[self.state_vars[1]]), axis=1)
             else:
                 query_points = np.array([[state[self.state_vars[0]], state[self.state_vars[1]]]])
+
+            # If one of the state variables is interpolated on a log scale, take its log in the query.
+            for j in range(len(self.state_vars)):
+                if self._state_vars_interp_scales[j] == 'log':
+                    query_points[:, j] = np.log(query_points[:, j])
 
         values = scipy.interpolate.griddata(self._interp_points, self._interp_values,
                                             query_points,

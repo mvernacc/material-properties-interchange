@@ -41,7 +41,8 @@ common_properties: &common_properties
 common_state_variations:    # State variations that are common between forms or conditions.
   T6_strength_tensile_ultimate: &T6_strength_tensile_ultimate
     state_vars: ['exposure time', 'temperature']
-    state_vars_units: ['kelvin', 'hours']    # TODO use log(hours) instead?
+    state_vars_units: ['kelvin', 'hours']
+    state_vars_interp_scales: ['log', 'linear']
     value_type: multiplier
     representation: table
     'exposure time':    # units: hours
