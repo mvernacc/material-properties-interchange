@@ -22,9 +22,9 @@ class Material:
         # Should I have a dict of Property instead?
         for property_name, property_dict in properties_dict.items():
             if 'variation_with_state' in property_dict:
-                prop = StateDependentProperty(property_dict)
+                prop = StateDependentProperty(property_name, property_dict)
             else:
-                prop = Property(property_dict)
+                prop = Property(property_name, property_dict)
             # TODO check that the property was properly constructed.
             setattr(self, property_name, prop)
 

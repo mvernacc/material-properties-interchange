@@ -4,7 +4,8 @@ import scipy.interpolate
 
 class Property:
     """A property of a material."""
-    def __init__(self, yaml_dict):
+    def __init__(self, name, yaml_dict):
+        self.name = name
         self.default_value = yaml_dict['default_value']
         self.units = yaml_dict['units']
         self.reference = yaml_dict['reference']
@@ -15,8 +16,8 @@ class Property:
 
 class StateDependentProperty(Property):
     """A property of a material which depends on state (e.g. temperature)."""
-    def __init__(self, yaml_dict):
-        Property.__init__(self, yaml_dict)
+    def __init__(self, name, yaml_dict):
+        Property.__init__(self, name, yaml_dict)
         self.state_vars = yaml_dict['variation_with_state']['state_vars']
         self.state_vars_units = yaml_dict['variation_with_state']['state_vars_units']
         self._value_type = yaml_dict['variation_with_state']['value_type']
@@ -110,3 +111,25 @@ class StateDependentProperty(Property):
             values = self.default_value * values
 
         return values
+
+    def get_state_domain(self):
+        """Get the domain over which the property's variation with state model is valid."""
+        if len(self.state_vars) == 1:
+            # Assumes interpolation points are in ascending order.
+            smin = self._interp_points[0]
+            smax = self._interp_points[-1]
+            if self._state_vars_interp_scales[0] == 'log':
+                smin = np.exp(smin)
+                smax = np.exp(smax)
+            result = {self.state_vars[0]: (smin, smax)}
+        elif len(self.state_vars) == 2:
+            result = {}
+            for j in range(2):
+                # Assumes interpolation points are in ascending order.
+                smin = self._interp_points[j, 0]
+                smax = self._interp_points[j, -1]
+                if self._state_vars_interp_scales[j] == 'log':
+                    smin = np.exp(smin)
+                    smax = np.exp(smax)
+                result[self.state_vars[j]] = (smin, smax)
+        return result

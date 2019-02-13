@@ -10,7 +10,7 @@ class TestProperty(unittest.TestCase):
     def test_init(self):
         """Test constructor."""
         yaml_dict = {'default_value': 1.0, 'units': 'MPa', 'reference': 'mmpds'}
-        prop = Property(yaml_dict)
+        prop = Property('name', yaml_dict)
         self.assertEqual(1.0, prop.default_value)
         self.assertEqual('MPa', prop.units)
         self.assertEqual('mmpds', prop.reference)
@@ -35,7 +35,7 @@ class TestStateDependentProperty(unittest.TestCase):
             }}
 
         # Action
-        prop = StateDependentProperty(yaml_dict)
+        prop = StateDependentProperty('name', yaml_dict)
 
         # Verification
         self.assertEqual(2.0, prop.default_value)
@@ -60,7 +60,7 @@ class TestStateDependentProperty(unittest.TestCase):
                 'temperature': np.arange(4),
                 'values': np.arange(4)**2,
             }}
-        prop = StateDependentProperty(yaml_dict)
+        prop = StateDependentProperty('name', yaml_dict)
 
         # Action and verification
         # Check queries at given points
@@ -97,7 +97,7 @@ class TestStateDependentProperty(unittest.TestCase):
             }}
 
         # Action
-        prop = StateDependentProperty(yaml_dict)
+        prop = StateDependentProperty('name', yaml_dict)
 
         # Verification
         self.assertEqual(2.0, prop.default_value)
@@ -145,7 +145,7 @@ class TestStateDependentProperty(unittest.TestCase):
                 }
             }}
 
-        prop = StateDependentProperty(yaml_dict)
+        prop = StateDependentProperty('name', yaml_dict)
 
         # Action and verification
         # Check queries at given points
