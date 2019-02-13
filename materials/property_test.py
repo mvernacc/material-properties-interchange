@@ -27,6 +27,7 @@ class TestStateDependentProperty(unittest.TestCase):
             'reference': 'mmpds',
             'variation_with_state': {
                 'state_vars': ['temperature'],
+                'state_vars_units': ['kelvin'],
                 'value_type': 'multiplier',
                 'representation': 'table',
                 'temperature': np.arange(4),
@@ -53,6 +54,7 @@ class TestStateDependentProperty(unittest.TestCase):
             'reference': 'mmpds',
             'variation_with_state': {
                 'state_vars': ['temperature'],
+                'state_vars_units': ['kelvin'],
                 'value_type': 'multiplier',
                 'representation': 'table',
                 'temperature': np.arange(4),
@@ -79,6 +81,7 @@ class TestStateDependentProperty(unittest.TestCase):
             'reference': 'mmpds',
             'variation_with_state': {
                 'state_vars': ['exposure time', 'temperature'],
+                'state_vars_units': ['hour', 'kelvin'],
                 'value_type': 'multiplier',
                 'representation': 'table',
                 'exposure time': {
@@ -127,6 +130,7 @@ class TestStateDependentProperty(unittest.TestCase):
             'reference': 'mmpds',
             'variation_with_state': {
                 'state_vars': ['exposure time', 'temperature'],
+                'state_vars_units': ['hour', 'kelvin'],
                 'value_type': 'multiplier',
                 'representation': 'table',
                 'exposure time': {

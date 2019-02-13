@@ -18,6 +18,7 @@ class StateDependentProperty(Property):
     def __init__(self, yaml_dict):
         Property.__init__(self, yaml_dict)
         self.state_vars = yaml_dict['variation_with_state']['state_vars']
+        self.state_vars_units = yaml_dict['variation_with_state']['state_vars_units']
         self._value_type = yaml_dict['variation_with_state']['value_type']
         self._representation = yaml_dict['variation_with_state']['representation']
 

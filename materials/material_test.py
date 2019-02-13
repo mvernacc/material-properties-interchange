@@ -36,6 +36,7 @@ class TestMaterial(unittest.TestCase):
                 'reference': 'mmpds',
                 'variation_with_state': {
                     'state_vars': ['temperature'],
+                    'state_vars_units': ['kelvin'],
                     'value_type': 'multiplier',
                     'representation': 'table',
                     'temperature': np.arange(4),
