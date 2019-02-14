@@ -1,7 +1,7 @@
 """Unit tests for Material."""
 import unittest
 import numpy as np
-from material import Material, load_from_yaml
+from materials.material import Material, load_from_yaml
 
 class TestMaterial(unittest.TestCase):
 

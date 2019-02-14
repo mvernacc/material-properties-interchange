@@ -1,6 +1,6 @@
 """Representation of a material's engineering properties and other data."""
 import yaml
-from property import Property, StateDependentProperty
+from materials.property import Property, StateDependentProperty
 
 class Material:
     """An engineering material, in a particular form and condition."""

@@ -3,7 +3,7 @@
 import unittest
 import numpy as np
 
-from property import Property, StateDependentProperty
+from materials.property import Property, StateDependentProperty
 
 class TestProperty(unittest.TestCase):
     """Tests for "simple" Property."""

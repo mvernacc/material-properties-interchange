@@ -1,8 +1,7 @@
 """Demonstration of plotting utilities."""
 from matplotlib import pyplot as plt
 
-import material
-import plot_utils
+from materials import material, plot_utils
 
 def main():
     # pylint: disable=no-member
