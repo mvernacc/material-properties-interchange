@@ -45,6 +45,7 @@ def decorate_temperature_axis(axes, temperature_range=(0, np.inf), comparison_se
         [1] Lozano, Paulo, "Monopropellant Thrusters", 16.522 Notes, MIT.
             Online: https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-522-space-propulsion-spring-2015/lecture-notes/MIT16_522S15_Lecture12.pdf
         [2] Sutton, George P and Oscar Biblarz, Rocket Propulsion Elements, 8th ed., 2010.
+        [3] US Department of Defense, "Global Climatic Data for Developing Military Products", MIL-HDBK-310, 1997.
     """
     temperature_comparisons = {
         'space propulsion': {
@@ -62,9 +63,20 @@ def decorate_temperature_axis(axes, temperature_range=(0, np.inf), comparison_se
             273.15 + 25: 'room temp.',
             273.15 + 70.7: 'Earth record high',
             273.15 + 100: 'water boils',
+        },
+        'aviation': {
+            199: 'cold day, 10 km alt.',    # 1% cold day, see [3] table 5.3.2.2.2
+            273.15 + 25: 'room temp.',
+            273.15 + 49: 'hot day, desert',    # 1% hot day, Saharah desert, see [3] sec. 5.1.1.2
+            278 * (1 + 0.2 * 2**2): '$T_{stag}$ at Mach 2',   # 1% hot day at 5 km alt, see [3]
+            278 * (1 + 0.2 * 3**2): '$T_{stag}$ at Mach 3',
+            278 * (1 + 0.2 * 4**2): '$T_{stag}$ at Mach 4',
+            278 * (1 + 0.2 * 5**2): '$T_{stag}$ at Mach 5',
+            278 * (1 + 0.2 * 6**2): '$T_{stag}$ at Mach 6',
+            273.15 + 2093: 'kerosene + air flame',
         }
     }
-    annotation_color = (0.3, 0.3, 0.3)
+    annotation_color = (0.4, 0.4, 0.4)
 
     if comparison_set not in temperature_comparisons:
         raise ValueError(

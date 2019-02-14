@@ -10,7 +10,7 @@ def main():
     al6061 = material.load_from_yaml(filename, 'extruded, thickness > 1 inch', 'T6')
 
     axes = plot_utils.plot_property_vs_state(al6061.youngs_modulus, 'temperature')
-    plot_utils.decorate_temperature_axis(axes, (50, 800), 'weather')
+    plot_utils.decorate_temperature_axis(axes, (50, 800), 'aviation')
     plt.grid()
 
     plt.show()
