@@ -2,6 +2,27 @@
 import yaml
 from materials.property import Property, StateDependentProperty
 
+
+def build_properties(properties_dict_yaml):
+    """Create a dict of Property from a (YAML-derived) dictionary.
+
+    Arguments:
+        properties_dict_yaml (dict): A dict of material property data derived from a YAML file.
+
+    Returns:
+        properties_dict_py (dict): keys are property name strings, values are Property objects.
+    """
+    properties_dict_py = {}    # Dictionary of properties as python objects
+    for property_name, property_dict in properties_dict_yaml.items():
+        if 'variation_with_state' in property_dict:
+            prop = StateDependentProperty(property_name, property_dict)
+        else:
+            prop = Property(property_name, property_dict)
+        # TODO check that the property was properly constructed.
+        properties_dict_py[property_name] = prop
+    return properties_dict_py
+
+
 class Material:
     """An engineering material, in a particular form and condition."""
     def __init__(self, name, form=None, condition=None, category=None, subcategory=None,
@@ -14,19 +35,7 @@ class Material:
         self.references = references
 
         if properties_dict is not None:
-            self.build_properties(properties_dict)
-
-    def build_properties(self, properties_dict):
-        """Create Property attributes from a (YAML-derived) dictionary."""
-        # Style question: is it bad to dynamically add attributes?
-        # Should I have a dict of Property instead?
-        for property_name, property_dict in properties_dict.items():
-            if 'variation_with_state' in property_dict:
-                prop = StateDependentProperty(property_name, property_dict)
-            else:
-                prop = Property(property_name, property_dict)
-            # TODO check that the property was properly constructed.
-            setattr(self, property_name, prop)
+            self.properties = build_properties(properties_dict)
 
 
 def load_from_yaml(filename, form, condition):
