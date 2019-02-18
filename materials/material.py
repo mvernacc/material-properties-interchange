@@ -27,6 +27,36 @@ class Material:
     """An engineering material, in a particular form and condition."""
     def __init__(self, name, form=None, condition=None, category=None, subcategory=None,
                  references=None, properties_dict=None):
+        """Create a Material.
+
+        We don't recommend using this function directly, instead use
+        `load_from_yaml` to create a Material object from a YAML file
+        of material property data.
+
+        Arguments:
+            name (string): Name of the material.
+            form (string): The form in which the material was produced,
+                e.g. 'extruded', 'forged', etc. We use form in the same sense as MMPDS [1].
+                The form can effect some properties of the material.
+            condition (string): The condition, heat treatment, or temper of the material.
+                MMPDS [1] uses 'condition' or 'temper' to refer to this concept,
+                depending on the alloy family.
+                Different alloy families use different condition/temper designations,
+                these designations are described in MMPDS or the relevant materials standards.
+                The condition can effect some properties of the material.
+            category (string): The broad category to which the material belongs,
+                e.g. 'metal', 'ceramic' or 'plastic'.
+            subcategory (string): The subcategory to which the material belongs,
+                e.g. 'aluminum alloy' or 'thermoplastic'.
+            references (list of string): References from which the material property data was gathered.
+                Each string in the list should be a bibtex entry for one reference.
+            properties_dict (dict): A dict of material property data derived from a YAML file.
+
+        References:
+            [1] Richard C Rice and Jana L Jackson and John Bakuckas and Steven Thompson,
+                "Metallic Materials Properties Development and Standardization (MMPDS)",
+                U.S. Department of Transportation, Federal Aviation Administration, 2001.
+        """
         self.name = name
         self.form = form
         self.condition = condition
@@ -39,7 +69,25 @@ class Material:
 
 
 def load_from_yaml(filename, form, condition):
-    """Load a material from a YAML file."""
+    """Load a material from a YAML file.
+
+    Arguments:
+        filename (string): Path to the YAML file containing the material data.
+        form (string): The form in which the material was produced,
+            e.g. 'extruded', 'forged', etc. We use form in the same sense as MMPDS [1].
+            The form can effect some properties of the material.
+            Must be a key in the `forms` section of the YAML file.
+        condition (string): The condition, heat treatment, or temper of the material.
+            MMPDS [1] uses 'condition' or 'temper' to refer to this concept,
+            depending on the alloy family.
+            Different alloy families use different condition/temper designations,
+            these designations are described in MMPDS or the relevant materials standards.
+            The condition can effect some properties of the material.
+            Must be a key in the `conditions` section of the YAML file for the given form.
+
+    Returns:
+        Material
+    """
     with open(filename, 'r') as yaml_stream:
         matl_dict = yaml.load(yaml_stream)
 

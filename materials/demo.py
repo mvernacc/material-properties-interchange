@@ -8,7 +8,7 @@ def main():
     filename = os.path.join(materials.get_database_dir(), 'Al_6061.yaml')
     al6061 = materials.load_from_yaml(filename, 'extruded, thickness > 1 inch', 'T6')
 
-    temperature = np.linspace(80, 580)
+    temperature = np.linspace(80, 580)    # [units: kelvin]
     modulus = al6061.properties['youngs_modulus'].query_value({'temperature': temperature})
 
     plt.plot(temperature, modulus, label=al6061.name)
