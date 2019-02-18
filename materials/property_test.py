@@ -4,6 +4,7 @@ import unittest
 import numpy as np
 
 from materials.property import Property, StateDependentProperty
+from materials.property import _create_interp_arrays_from_yaml_table
 
 class TestProperty(unittest.TestCase):
     """Tests for "simple" Property."""
@@ -14,6 +15,56 @@ class TestProperty(unittest.TestCase):
         self.assertEqual(1.0, prop.default_value)
         self.assertEqual('MPa', prop.units)
         self.assertEqual('mmpds', prop.reference)
+
+
+class TestCreatInterpArrays(unittest.TestCase):
+    """Tests for _create_interp_arrays_from_yaml_table."""
+
+    def test_2d(self):
+        """Test with a 2-d lookup table."""
+        # Setup
+        yaml_dict = {
+            'default_value': 2.0,
+            'units': 'MPa',
+            'reference': 'mmpds',
+            'variation_with_state': {
+                'state_vars': ['exposure time', 'temperature'],
+                'state_vars_units': ['hour', 'kelvin'],
+                'value_type': 'multiplier',
+                'representation': 'table',
+                'exposure time': {
+                    0.0: {
+                        'temperature': np.arange(4),
+                        'values': np.arange(4)**2
+                    },
+                    0.1: {
+                        'temperature': np.arange(4),
+                        'values': (np.arange(4) + 0.1)**2
+                    },
+                }
+            }}
+
+        # Action
+        interp_points, interp_values = _create_interp_arrays_from_yaml_table(
+            yaml_dict)
+
+        # Verification
+        self.assertEqual(interp_points.shape[0], 4 * 2)
+        self.assertEqual(interp_points.shape[1], 2)
+        self.assertEqual(interp_points[0, 0], 0)
+        self.assertEqual(interp_points[4, 0], 0.1)
+        self.assertEqual(interp_points[0, 1], 0)
+        self.assertEqual(interp_points[3, 1], 3)
+        self.assertEqual(interp_points[4, 1], 0)
+        self.assertEqual(interp_points[7, 1], 3)
+
+        self.assertEqual(len(interp_values.shape), 1)
+        self.assertEqual(interp_values.shape[0], 4 * 2)
+        self.assertEqual(interp_values[0], 0)
+        self.assertEqual(interp_values[3], 3**2)
+        self.assertEqual(interp_values[4], 0.1**2)
+        self.assertEqual(interp_values[7], (3.1)**2)
+
 
 
 class TestStateDependentProperty(unittest.TestCase):
@@ -106,19 +157,6 @@ class TestStateDependentProperty(unittest.TestCase):
         self.assertEqual(len(prop.state_vars), 2)
         self.assertEqual(prop.state_vars[0], 'exposure time')
         self.assertEqual(prop.state_vars[1], 'temperature')
-
-        # Verification of "private" attributes
-        # These tests are tied to the implementation, not interface
-        # Is this sketchy? Should the test only depend on the interface?
-        # pylint: disable=protected-access
-        self.assertEqual(prop._interp_points.shape[0], 4 * 2)
-        self.assertEqual(prop._interp_points.shape[1], 2)
-        self.assertEqual(prop._interp_points[0, 0], 0)
-        self.assertEqual(prop._interp_points[4, 0], 0.1)
-        self.assertEqual(prop._interp_points[0, 1], 0)
-        self.assertEqual(prop._interp_points[3, 1], 3)
-        self.assertEqual(prop._interp_points[4, 1], 0)
-        self.assertEqual(prop._interp_points[7, 1], 3)
 
     def test_query_2d(self):
         """Test query_value with a 2-d lookup table."""
