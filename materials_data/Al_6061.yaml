@@ -7,7 +7,7 @@ references:    # In bibtex format
   - |
     @techreport{mmpds01,
       author = {Richard C Rice and Jana L Jackson and John Bakuckas and Steven Thompson},
-      title = {Meteallic Materials Properties Development and Standardization (MMPDS)},
+      title = {Metallic Materials Properties Development and Standardization (MMPDS)},
       institution = {U.S. Department of Transportation, Federal Aviation Administration},
       year = {2001},
     }
