@@ -1,12 +1,13 @@
 """Demonstration."""
+import os.path
 import numpy as np
 import matplotlib.pyplot as plt
-import material
+import materials
 
 def main():
     # pylint: disable=no-member
-    filename = '../materials_data/Al_6061.yaml'
-    al6061 = material.load_from_yaml(filename, 'extruded, thickness > 1 inch', 'T6')
+    filename = os.path.join(materials.get_database_dir(), 'Al_6061.yaml')
+    al6061 = materials.load_from_yaml(filename, 'extruded, thickness > 1 inch', 'T6')
 
     temperature = np.linspace(80, 580)
     modulus = al6061.youngs_modulus.query_value({'temperature': temperature})

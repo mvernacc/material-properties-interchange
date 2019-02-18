@@ -1,7 +1,8 @@
 """Unit tests for Material."""
+import os.path
 import unittest
 import numpy as np
-from materials.material import Material, load_from_yaml
+from materials import Material, load_from_yaml, get_database_dir
 
 class TestMaterial(unittest.TestCase):
 
@@ -61,7 +62,7 @@ class TestLoadFromYaml(unittest.TestCase):
 
     def test_al6061_T6_extruded(self):
         # Setup
-        filename = '../materials_data/Al_6061.yaml'
+        filename = os.path.join(get_database_dir(), 'Al_6061.yaml')
 
         # Action
         al6061 = load_from_yaml(filename, 'extruded, thickness > 1 inch', 'T6')
