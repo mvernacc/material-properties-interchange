@@ -117,10 +117,24 @@ common_state_variations:    # State variations that are common between forms or 
           0.0868, 0.0772, 0.0683, 0.0641, 0.0594]
 
 forms:
+  # This map gives different forms in which the material can produced,
+  # e.g. 'extruded', 'forged', etc. We use form in the same sense as MMPDS.
+  #
+  # Within each form, the `conditions` map,  gives different conditions,
+  # a.k.a heat treatments or tempers, that can be applied to the material.
+  # MMPDS uses the terms 'condition' and 'temper' to refer to this concept.
+  #
+  # The form and condition can effect some properties of the material, so there is a
+  # separate `properties` map within each form and condition.
   'extruded, thickness > 1 inch':
     conditions:
       T6:
         properties:
+          # The `<<: *x` is YAML magic which copies all the keys of `x`
+          # into the current map.
+          # See https://learnxinyminutes.com/docs/yaml/
+          # This allows us to copy common properties into each form & condition
+          # that share those properties.
           <<: *common_properties
           strength_tensile_ultimate:
             units: MPa
