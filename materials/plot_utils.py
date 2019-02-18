@@ -5,8 +5,22 @@ from matplotlib import pyplot as plt
 
 
 def plot_property_vs_state(prop, state_name, state_range=None,
-                           value_for_other_state=None, axes=None, **kwargs):
-    """Plot a state-dependent property."""
+                           value_for_other_state=None, axes=None, **pyplot_kwargs):
+    """Plot a state-dependent property.
+
+    Arguments:
+        prop (Property): The property to plot.
+        state_name (string): Name of the state variable to plot the property value against.
+        state_range (tuple of length 2): Range of state variable values to plot over (low, high).
+        value_for_other_state (scalar): If the property depends on two states, fix the
+            other state at this value.
+        axes (matplotlib.axes.Axes): Axes to plot on. Makes a new figure if `axes` is None.
+
+    Other keyword arguments are passed to `pyplot.plot`.
+
+    Returns:
+        matplotlib.axes.Axes: The axes on which the plot was drawn.
+    """
     if len(prop.state_vars) > 1 and value_for_other_state is None:
         raise ValueError('Property depends on more than one state. Must provide value_for_other_state.')
     if len(prop.state_vars) == 1 and value_for_other_state is not None:
@@ -30,7 +44,7 @@ def plot_property_vs_state(prop, state_name, state_range=None,
 
     values = prop.query_value(query)
 
-    axes.plot(states, values, **kwargs)
+    axes.plot(states, values, **pyplot_kwargs)
 
     index = prop.state_vars.index(state_name)
     axes.set_xlabel('{:s} [{:s}]'.format(state_name, prop.state_vars_units[index]))
