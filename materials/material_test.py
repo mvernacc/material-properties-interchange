@@ -4,6 +4,8 @@ import unittest
 import numpy as np
 from materials import Material, load_from_yaml, get_database_dir
 from material import build_properties
+from materials.property import Property
+
 
 class TestBuildProperties(unittest.TestCase):
     """Unit tests for build_properties."""
@@ -81,6 +83,24 @@ class TestMaterial(unittest.TestCase):
         self.assertTrue('density' in matl.properties)
         self.assertEqual(matl.name, 'name')
         self.assertTrue(matl.category is None)
+
+    def test_getitem(self):
+        """Unit test for __getitem__"""
+        # Setup
+        yaml_dict = {
+            'density': {
+                'default_value': 1000.,
+                'units': 'kg m^-3',
+                'reference': 'mmpds'
+                }
+            }
+        matl = Material('name', properties_dict=yaml_dict)
+
+        # Action
+        prop = matl['density']
+
+        # Verification
+        self.assertTrue(issubclass(type(prop), Property))
 
 
 class TestLoadFromYaml(unittest.TestCase):

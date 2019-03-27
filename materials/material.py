@@ -67,6 +67,25 @@ class Material:
         if properties_dict is not None:
             self.properties = build_properties(properties_dict)
 
+    def __getitem__(self, key):
+        """Get a property of the material by name.
+        A Material is primarily a collection of properties, so we use []
+        as a shorthand to access a property.
+        i.e. `mat[key]` is a shorthand for `mat.properties[key]`.
+
+        Argument:
+            key (string): the name of a property.
+
+        Returns:
+            Property: `self.properties[key]`
+        """
+        if key not in self.properties:
+            raise KeyError(
+                'This Material does not have a {:s} property'.format(key)
+                + '\nThe valid keys are {}'.format(self.properties.keys())
+                )
+        return self.properties[key]
+
 
 def load_from_yaml(filename, form, condition):
     """Load a material from a YAML file.

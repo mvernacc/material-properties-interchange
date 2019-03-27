@@ -37,3 +37,12 @@ class StateDependentProperty(Property):
         if self.variations_with_state[state_model].value_type == 'multiplier':
             values = self.default_value * values
         return values
+
+    def __getitem__(self, key):
+        """Shorthand for self.variations_with_state[key]."""
+        if key not in self.variations_with_state:
+            raise KeyError(
+                'This Property does not have a {:s} variations with state model'.format(key)
+                + '\nThe valid keys are {}'.format(self.variations_with_state.keys())
+                )
+        return self.variations_with_state[key]

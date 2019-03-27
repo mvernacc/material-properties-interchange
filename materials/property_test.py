@@ -4,6 +4,7 @@ import unittest
 import numpy as np
 
 from materials.property import Property, StateDependentProperty
+import materials.variation_with_state as vstate
 
 class TestProperty(unittest.TestCase):
     """Tests for "simple" Property."""
@@ -149,6 +150,34 @@ class TestStateDependentProperty(unittest.TestCase):
             prop.query_value({'fish': 1., 'exposure time': 1})    # fish is not a state variable.
 
 
+    def test_getitem(self):
+        """Unit test for __getitem__"""
+        # Setup
+        dv = 2.0
+        yaml_dict = {
+            'default_value': dv,
+            'units': 'MPa',
+            'reference': 'mmpds',
+            'variations_with_state': {
+                'thermal': {
+                    'state_vars': ['temperature'],
+                    'state_vars_units': ['kelvin'],
+                    'value_type': 'multiplier',
+                    'representation': 'table',
+                    'reference': 'mmpds',
+                    'temperature': np.arange(4),
+                    'values': np.arange(4)**2,
+                }
+            }
+        }
+        prop = StateDependentProperty('name', yaml_dict)
+
+        # Action
+        state_model = prop['thermal']
+
+        # Verification
+        self.assertTrue(issubclass(
+            type(state_model), vstate.VariationWithState))
 
 if __name__ == '__main__':
     unittest.main()
