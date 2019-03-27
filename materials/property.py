@@ -16,6 +16,10 @@ class Property:
         """Query the value of the property."""
         return self.default_value
 
+    def __str__(self):
+        return '{:s} = {:.4g} {:s} [Data from {:s}]'.format(
+            self.name, self.query_value(), self.units, self.reference)
+
 
 class StateDependentProperty(Property):
     """A property of a material which depends on state (e.g. temperature)."""
@@ -46,3 +50,11 @@ class StateDependentProperty(Property):
                 + '\nThe valid keys are {}'.format(self.variations_with_state.keys())
                 )
         return self.variations_with_state[key]
+
+    def __str__(self):
+        string = '{:s}, a state-dependent property with a default value of {:.4g} {:s}'.format(
+            self.name, self.default_value, self.units)
+        string += '\n\tand with the following variation-with-state models:'
+        for state_model_name in self.variations_with_state:
+            string += '\n - {:s}: {:s}'.format(state_model_name, str(self[state_model_name]))
+        return string

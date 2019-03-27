@@ -16,6 +16,13 @@ class TestProperty(unittest.TestCase):
         self.assertEqual('MPa', prop.units)
         self.assertEqual('mmpds', prop.reference)
 
+    def test_str(self):
+        """Test __str__."""
+        yaml_dict = {'default_value': 1.0, 'units': 'MPa', 'reference': 'mmpds'}
+        prop = Property('Strength', yaml_dict)
+        string = str(prop)
+        print('\n' + string + '\n')
+
 
 class TestStateDependentProperty(unittest.TestCase):
     """Tests for StateDependentProperty class."""
@@ -178,6 +185,36 @@ class TestStateDependentProperty(unittest.TestCase):
         # Verification
         self.assertTrue(issubclass(
             type(state_model), vstate.VariationWithState))
+
+    def test_str(self):
+        """Unit test for __str__"""
+        # Setup
+        dv = 2.0
+        yaml_dict = {
+            'default_value': dv,
+            'units': 'MPa',
+            'reference': 'mmpds',
+            'variations_with_state': {
+                'thermal': {
+                    'state_vars': ['temperature'],
+                    'state_vars_units': ['kelvin'],
+                    'value_type': 'multiplier',
+                    'representation': 'table',
+                    'reference': 'mmpds',
+                    'temperature': np.arange(4),
+                    'values': np.arange(4)**2,
+                }
+            }
+        }
+        prop = StateDependentProperty('Strength', yaml_dict)
+
+        # Action
+        string = str(prop)
+
+        # Verification
+        print('\n' + string + '\n')
+
+
 
 if __name__ == '__main__':
     unittest.main()

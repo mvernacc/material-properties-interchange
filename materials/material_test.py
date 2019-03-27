@@ -119,7 +119,7 @@ class TestLoadFromYaml(unittest.TestCase):
         self.assertEqual(al6061.properties['youngs_modulus'].units, 'GPa')
         result = al6061.properties['youngs_modulus'].query_value({'temperature': 294})
         self.assertAlmostEqual(result, 68.3, delta=0.5)
-
+        print('\n' + str(al6061) + '\n')        
 
 
 if __name__ == '__main__':

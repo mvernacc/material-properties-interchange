@@ -86,6 +86,14 @@ class Material:
                 )
         return self.properties[key]
 
+    def __str__(self):
+        string = self.name
+        string += '\n' + '-'*len(self.name) + '\n'
+        string += '{:s}, {:s}\n'.format(self.category, self.subcategory)
+        string += 'Properties for the "{:s}" form, "{:s}" condition:\n'.format(self.form, self.condition)
+        string += '\n\n'.join([str(prop) for prop in self.properties.values()])
+        return string
+
 
 def load_from_yaml(filename, form, condition):
     """Load a material from a YAML file.

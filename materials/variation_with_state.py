@@ -80,7 +80,8 @@ def _create_interp_arrays_from_yaml_table(yaml_dict, state_vars, state_vars_inte
 
 class VariationWithState:
     """A model of a material property's variation with state."""
-    def __init__(self, state_vars, state_vars_units, value_type, reference):
+    def __init__(self, representation, state_vars, state_vars_units, value_type, reference):
+        self.representation = representation
         self.state_vars = state_vars
         self.state_vars_units = state_vars_units
         allowed_value_types = ['multiplier', 'overrride']
@@ -97,13 +98,24 @@ class VariationWithState:
         """Get the domain over which the variation with state model is valid."""
         pass
 
+    def __str__(self):
+        state_var_str = ', '.join(self.state_vars)
+        domain_str_list = []
+        for i, name in enumerate(self.state_vars):
+            domain = self.get_state_domain()    #pylint: disable=assignment-from-no-return
+            domain_str_list.append(
+                '{:.4g} to {:.4g} {:s}'.format(
+                    domain[name][0], domain[name][1], self.state_vars_units[i]))
+        domain_str = ', '.join(domain_str_list)
+        return 'Variation with {:s} over {:s}, represented as a {:s}. [Data from {:s}]'.format(
+            state_var_str, domain_str, self.representation, self.reference)
+
 
 class VariationWithStateTable(VariationWithState):
     """A material property's variation with state, represented as a table."""
     def __init__(self, state_vars, state_vars_units, value_type, reference,
                  interp_points, interp_values, state_vars_interp_scales):
-        VariationWithState.__init__(self, state_vars, state_vars_units, value_type, reference)
-        self.representation = 'table'
+        VariationWithState.__init__(self, 'table', state_vars, state_vars_units, value_type, reference)
         self._interp_points = interp_points
         self._interp_values = interp_values
         self._state_vars_interp_scales = state_vars_interp_scales

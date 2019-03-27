@@ -235,6 +235,39 @@ class TestVariationWithStateTable(unittest.TestCase):
         self.assertEqual(domain['temperature'][0], 0)
         self.assertEqual(domain['temperature'][1], 3)
 
+    def test_str(self):
+        """Unit test for __str__."""
+        # Setup
+        yaml_dict = {
+            'exposure time': {
+                0.0: {
+                    'temperature': np.arange(4),
+                    'values': np.arange(4)**2
+                },
+                0.1: {
+                    'temperature': np.arange(4),
+                    'values': (np.arange(4) + 0.5)**2
+                },
+            }
+        }
+        state_vars = ['exposure time', 'temperature']
+        scales = ['linear', 'linear']
+        #pylint: disable=protected-access
+        interp_points, interp_values = vstate._create_interp_arrays_from_yaml_table(
+            yaml_dict, state_vars, scales)
+
+        state_model = vstate.VariationWithStateTable(
+            state_vars, ['hour', 'kelvin'], 'multiplier', 'reference',
+            interp_points, interp_values,
+            scales)
+
+        # Action
+        string = str(state_model)
+
+        # Verification
+        # TODO automate checking this?
+        print(string)
+
 
 if __name__ == '__main__':
     unittest.main()
