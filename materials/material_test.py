@@ -36,13 +36,16 @@ class TestBuildProperties(unittest.TestCase):
                 'default_value': dv,
                 'units': 'MPa',
                 'reference': 'mmpds',
-                'variation_with_state': {
-                    'state_vars': ['temperature'],
-                    'state_vars_units': ['kelvin'],
-                    'value_type': 'multiplier',
-                    'representation': 'table',
-                    'temperature': np.arange(4),
-                    'values': np.arange(4)**2,
+                'variations_with_state': {
+                    'thermal': {
+                        'state_vars': ['temperature'],
+                        'state_vars_units': ['kelvin'],
+                        'value_type': 'multiplier',
+                        'representation': 'table',
+                        'reference': 'mmpds',
+                        'temperature': np.arange(4),
+                        'values': np.arange(4)**2,
+                    }
                 }
             }
         }

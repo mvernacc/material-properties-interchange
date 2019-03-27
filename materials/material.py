@@ -14,7 +14,7 @@ def build_properties(properties_dict_yaml):
     """
     properties_dict_py = {}    # Dictionary of properties as python objects
     for property_name, property_dict in properties_dict_yaml.items():
-        if 'variation_with_state' in property_dict:
+        if 'variations_with_state' in property_dict:
             prop = StateDependentProperty(property_name, property_dict)
         else:
             prop = Property(property_name, property_dict)

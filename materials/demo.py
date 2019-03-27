@@ -15,7 +15,7 @@ def main():
     plt.plot(al6061.properties['solidus_temperature'].query_value(), 0, color='C0', marker='x')
     plt.legend()
     plt.grid(True)
-    x_units = al6061.properties['youngs_modulus'].state_vars_units[0]
+    x_units = al6061.properties['youngs_modulus'].variations_with_state['thermal'].state_vars_units[0]
     plt.xlabel('Temperature [{:s}]'.format(x_units))
     y_units = al6061.properties['youngs_modulus'].units
     plt.ylabel('Youngs Modulus $E$ [{:s}]'.format(y_units))
@@ -29,7 +29,7 @@ def main():
         plt.plot(temperature, uts, label=al6061.name + ', {:.0f} hr exposure'.format(exp_time))
     plt.legend()
     plt.grid(True)
-    x_units = al6061.properties['strength_tensile_ultimate'].state_vars_units[0]
+    x_units = al6061.properties['strength_tensile_ultimate'].variations_with_state['thermal'].state_vars_units[0]
     plt.xlabel('Temperature [{:s}]'.format(x_units))
     y_units = al6061.properties['strength_tensile_ultimate'].units
     plt.ylabel('Ultimate Tensile Strength $\\sigma_{{ut}}$ [{:s}]'.format(y_units))
