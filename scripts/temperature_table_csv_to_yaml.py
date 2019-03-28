@@ -7,7 +7,10 @@ import numpy as np
 
 # See https://stackoverflow.com/a/33944926
 def float_representer(dumper, value):
-    text = '{0:.4f}'.format(value)
+    if abs(value) < 1e6:
+        text = '{0:.4f}'.format(value)
+    else:
+        text = '{:.4e}'.format(value)
     return dumper.represent_scalar(u'tag:yaml.org,2002:float', text)
 yaml.add_representer(float, float_representer)
 
