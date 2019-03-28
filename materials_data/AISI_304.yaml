@@ -18,6 +18,14 @@ references:    # In bibtex format
       year = {2019},
       url = {http://www.matweb.com/search/datasheet.aspx?matguid=abc4415b0f8b490387e3c922237098da}
     }
+  - |
+    @incollection{IrvinBement1967
+      author = {J. E. Irvin adn A. L. Bement},
+      title = {Nature of Radiation Damage to Engineering Properties of Various Stainless Steel Alloys},
+      booktitle = {Effects of Radiation on Strucutral Materials},
+      publisher = {{America Society for Testing and Materials}},
+      year = {1967},
+    }
 
 elemental_composition:
   C: [0, 0.08]
@@ -153,6 +161,39 @@ common_state_variations:    # State variations that are common between forms or 
       0.7022, 0.6742, 0.6520, 0.6355, 0.6250, 0.6180, 0.6144, 0.6125, 0.6105, 0.6105,
       0.6105, 0.6105, 0.6126, 0.6125, 0.6103, 0.6074, 0.6002, 0.5936, 0.5853, 0.5727,
       0.5575, 0.5418, 0.5245, 0.5046, 0.4833, 0.4601, 0.4356, 0.4117, 0.3909, 0.3804]
+  annealed_strength_tensile_yield_radiation: &annealed_strength_tensile_yield_radiation
+    state_vars: ['temperature', 'neutron dose']
+    state_vars_units: ['kelvin', 'cm^-2']
+    state_vars_interp_scales: ['linear', 'log']
+    value_type: override
+    representation: table
+    reference: 'IrvinBement1967'
+    note: 'For irradiation temperature of 290 C. Neutron fluence for energies > 1 MeV.'
+    temperature:
+      295:
+        'neutron dose': [0, 5.9620e+19, 8.0662e+19, 1.7761e+20, 3.4291e+20, 7.2504e+20, 1.5555e+21, 6.1675e+21]
+        values: [221.7777, 435.6330, 501.6940, 627.3829, 705.4964, 794.9245, 887.1796, 1050.5222]
+      573:
+        'neutron dose': [0, 6.2783e+19, 1.5186e+20, 3.4778e+20, 7.0900e+20, 6.1411e+21]
+        values: [162.0670, 299.1465, 407.7634, 500.0461, 580.2556, 832.9849]
+      673:
+        'neutron dose': [3.4583e+20, 1.4582e+21, 6.0648e+21]
+        values: [399.8204, 555.2681, 750.5207]
+      773:
+        'neutron dose': [6.0661e+20, 1.4452e+21, 6.0508e+21]
+        values: [394.0424, 469.9701, 633.9470]
+      873:
+        'neutron dose': [0, 1.5006e+20, 3.4828e+20, 7.0678e+20, 1.4608e+21, 6.1065e+21]
+        values: [84.5879, 168.9275, 206.4708, 237.6431, 277.3307, 362.4150]
+      923:
+        'neutron dose': [0, 1.8562e+20, 4.4817e+20, 1.4465e+21]
+        values: [70.3704, 105.6314, 121.1314, 145.1191]
+      973:
+        'neutron dose': [0, 1.8626e+20, 4.4970e+20, 1.4566e+21]
+        values: [62.5521, 94.9717, 110.4717, 130.9016]
+      1023:
+        'neutron dose': [0, 1.5037e+20, 1.8626e+20, 4.5127e+20, 6.1241e+21]
+        values: [49.0476, 91.4484, 94.9717, 103.3629, 141.3475]
 
 forms:
   'sheet and strip':
@@ -177,3 +218,5 @@ forms:
             variations_with_state:
               thermal:
                 <<: *annealed_strength_tensile_yield_thermal
+              radiation:
+                <<: *annealed_strength_tensile_yield_radiation
