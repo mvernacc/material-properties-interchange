@@ -19,6 +19,17 @@ references:    # In bibtex format
       url = {http://www.matweb.com/search/DataSheet.aspx?MatGUID=b8d536e0b9b54bd7b69e4124d8f1d20a&ckck=1}
     }
 
+elemental_composition:    # percent by mass, [min, max]
+  Al: [95.8, 98.6]
+  Cr: [0.04, 0.35]
+  Cu: [0.15, 0.40]
+  Fe: [0, 0.70]
+  Mg: [0.80, 1.2]
+  Mn: [0, 0.15]
+  Si: [0.40, 0.80]
+  Ti: [0, 0.15]
+  Zn: [0, 0.25]
+  other: [0, 0.15]
 
 common_properties: &common_properties
   youngs_modulus:    # Example of a state-dependent property
