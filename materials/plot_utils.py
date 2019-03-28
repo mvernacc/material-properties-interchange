@@ -28,7 +28,7 @@ def plot_property_vs_state(prop, state_model=None, state_name=None, state_range=
         raise ValueError('Property {:s} does not have a variation with state model named {:s}'.format(
             prop.name, state_model))
     if state_name is None:
-        state_name = prop.variations_with_state.state_vars[0]
+        state_name = prop.variations_with_state[state_model].state_vars[0]
     if len(prop.variations_with_state[state_model].state_vars) > 1 and value_for_other_state is None:
         raise ValueError('Property depends on more than one state. Must provide value_for_other_state.')
     if len(prop.variations_with_state[state_model].state_vars) == 1 and value_for_other_state is not None:
