@@ -84,9 +84,11 @@ class VariationWithState:
         self.representation = representation
         self.state_vars = state_vars
         self.state_vars_units = state_vars_units
-        allowed_value_types = ['multiplier', 'overrride']
+        allowed_value_types = ['multiplier', 'override']
         if value_type not in allowed_value_types:
-            raise ValueError('Allowed value_types are {}'.format(allowed_value_types))
+            raise ValueError(
+                'value_type "{:s}" is not allowed.\n'.format(value_type)
+                + 'Allowed value_types are {}'.format(allowed_value_types))
         self.value_type = value_type
         self.reference = reference
 
