@@ -1,0 +1,179 @@
+name: AISI 304
+category: metal
+subcategory: stainless steel
+uns_code: S30400
+
+references:    # In bibtex format
+  - |
+    @techreport{mmpds01,
+      author = {Richard C Rice and Jana L Jackson and John Bakuckas and Steven Thompson},
+      title = {Metallic Materials Properties Development and Standardization (MMPDS)},
+      institution = {U.S. Department of Transportation, Federal Aviation Administration},
+      year = {2001},
+    }
+  - |
+    @online{matweb304,
+      author = {{MatWeb, LLC}},
+      title = {304 Stainless Steel},
+      year = {2019},
+      url = {http://www.matweb.com/search/datasheet.aspx?matguid=abc4415b0f8b490387e3c922237098da}
+    }
+
+elemental_composition:
+  C: [0, 0.08]
+  Cr: [18., 20.]
+  Fe: [66.345, 74.]
+  Mn: [0, 2.0]
+  Ni: [8.0, 10.5]
+  P: [0, 0.045]
+  Si: [0, 1.]
+  S: [0, 0.03]
+
+common_properties: &common_properties
+  density:
+    units: 'kg m^-3'
+    default_value: 7916.    # 0.286 lbm/in^3
+    reference: mmpds01
+  poissons_ratio:
+    units: dimensionless
+    default_value: 0.27
+    reference: mmpds01
+  youngs_modulus:
+    units: GPa
+    default_value: 200.   # 29.0 msi
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        # Note: this variation-with-temperature data is for AISI 301, a similar grade of austenitic stainless steel.
+        state_vars: ['temperature']
+        state_vars_units: ['kelvin']
+        value_type: multiplier
+        representation: table
+        reference: 'mmpds01'
+        temperature: [295., 922.]
+        values: [1.0, 0.78]
+  thermal_expansion_linear:
+    # Note: this data is for AISI 301, a similar grade of austenitic stainless steel.
+    units: '1e-6 K^-1'
+    default_value: 15.5
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: ['kelvin']
+        value_type: override
+        representation: table
+        reference: 'mmpds01'
+        temperature: [19.1150, 33.1500, 60.9278, 88.7056, 116.4833, 144.2611, 172.0389, 199.8167,
+          227.5944, 255.3722, 283.1500, 310.9278, 338.7056, 366.4833, 394.2611, 422.0389,
+          449.8167, 477.5944, 505.3722, 533.1500, 560.9278, 588.7056, 616.4833, 644.2611,
+          672.0389, 699.8167, 727.5944, 755.3722, 783.1500, 810.9278, 838.7056, 866.4833,
+          894.2611, 922.0389, 949.8167, 977.5944, 1005.3722, 1033.1500, 1060.9278, 1088.7056,
+          1116.4833, 1141.9217]
+        values: [9.7290, 10.3140, 11.2266, 12.1230, 12.8070, 13.3992, 13.9140, 14.3568, 14.7420,
+          15.0822, 15.3882, 15.6762, 15.9390, 16.1856, 16.4160, 16.6284, 16.8318, 17.0208,
+          17.1990, 17.3718, 17.5338, 17.6886, 17.8254, 17.9640, 18.1044, 18.2376, 18.3564,
+          18.4824, 18.6084, 18.7218, 18.8424, 18.9522, 19.0512, 19.1574, 19.2510, 19.3482,
+          19.4400, 19.5282, 19.6038, 19.6938, 19.7730, 19.8342]
+  heat_capacity:
+    # Note: this data is for AISI 301, a similar grade of austenitic stainless steel.
+    units: 'J kg^-1 K^-1'
+    default_value: 448.
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: ['kelvin']
+        value_type: override
+        representation: table
+        reference: 'mmpds01'
+        temperature: [83.1500, 110.9278, 138.7056, 166.4833, 194.2611, 222.0389, 249.8167,
+          277.5944, 305.3722, 333.1500, 360.9278, 388.7056, 416.4833, 444.2611, 472.0389,
+          499.8167, 527.5944, 555.3722, 583.1500, 610.9278, 638.7056, 666.4846, 694.2611,
+          722.0389, 749.8167, 777.5944, 805.3734, 833.1500, 860.9278, 888.6994, 916.4759,
+          944.2562, 972.0451, 999.8241, 1027.5944, 1055.3734, 1083.1537, 1110.9278, 1140.1789]
+        values: [290.5778, 317.3746, 342.9153, 368.8747, 391.0658, 409.0699, 427.9114, 444.2407,
+          457.6391, 472.2936, 486.9481, 496.1595, 506.6270, 512.9075, 522.9563, 528.8181,
+          534.6799, 540.1230, 548.0783, 554.3588, 558.5458, 561.4767, 566.5011, 570.2694,
+          575.2938, 579.4808, 584.0865, 589.1109, 594.1353, 600.8345, 605.0215, 611.3020,
+          615.4890, 619.6760, 623.0256, 626.7939, 630.1435, 631.3996, 634.7492]
+  thermal_conductivity:
+    # Note: this data is for AISI 301, a similar grade of austenitic stainless steel.
+    units: 'W m^-1 K^-1'
+    default_value: 16.2
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: ['kelvin']
+        value_type: override
+        representation: table
+        reference: 'mmpds01'
+        temperature:  [146.3061, 166.4833, 194.2611, 222.0389, 249.8167, 277.5944, 305.3722,
+          333.1500, 360.9278, 388.7056, 1027.5944, 1055.3722, 1083.1500, 1110.9278, 1137.9265]
+        values: [10.2332, 11.2847, 12.5776, 13.5702, 14.4056, 15.0720, 15.7684, 16.2065, 16.5459,
+          16.9167, 25.0857, 25.4769, 25.7744, 26.1765, 26.4377]
+
+common_state_variations:    # State variations that are common between forms or conditions.
+  annealed_strength_tensile_ultimate_thermal: &annealed_strength_tensile_ultimate_thermal
+    state_vars: ['temperature']
+    state_vars_units: ['kelvin']
+    value_type: multiplier
+    representation: table
+    reference: 'mmpds01'
+    note: 'For exposure times up to 0.5 hour'
+    temperature: [4.7812, 55.3722, 77.5944, 99.8167, 122.0389, 144.2611, 166.4833, 188.7056,
+      210.9278, 233.1500, 255.3722, 277.5944, 299.8167, 322.0389, 344.2611, 366.4833,
+      388.7056, 410.9278, 433.1500, 455.3722, 477.5944, 499.8167, 522.0389, 544.2611,
+      566.4833, 588.7056, 610.9278, 633.1500, 655.3722, 677.5944, 699.8167, 722.0389,
+      744.2611, 766.4833, 788.7056, 810.9278, 833.1500, 855.3722, 877.5944, 899.8167,
+      922.0389, 944.2611, 966.4833, 988.7056, 1010.9278, 1033.1500, 1055.3722, 1077.5944,
+      1087.5235]
+    values: [2.4203, 2.1803, 2.0741, 1.9601, 1.8480, 1.7442, 1.6374, 1.5249, 1.4148, 1.3108,
+      1.2013, 1.0948, 1.0005, 0.9272, 0.8667, 0.8153, 0.7770, 0.7481, 0.7268, 0.7120,
+      0.7033, 0.6967, 0.6946, 0.6927, 0.6913, 0.6892, 0.6867, 0.6855, 0.6844, 0.6844,
+      0.6831, 0.6755, 0.6672, 0.6567, 0.6453, 0.6328, 0.6161, 0.5975, 0.5760, 0.5506,
+      0.5231, 0.4920, 0.4607, 0.4270, 0.3915, 0.3564, 0.3185, 0.2797, 0.2613]
+  annealed_strength_tensile_yield_thermal: &annealed_strength_tensile_yield_thermal
+    state_vars: ['temperature']
+    state_vars_units: ['kelvin']
+    value_type: multiplier
+    representation: table
+    reference: 'mmpds01'
+    note: 'For exposure times up to 0.5 hour'
+    temperature: [4.6835, 30.8543, 55.3722, 77.5944, 99.8167, 122.0389, 144.2611, 166.4833,
+      188.7056, 210.9278, 233.1500, 255.3722, 277.5944, 299.8167, 322.0389, 344.2611,
+      366.4833, 388.7056, 410.9278, 433.1500, 455.3722, 477.5944, 499.8167, 522.0389,
+      544.2611, 566.4833, 588.7056, 610.9278, 633.1500, 655.3722, 677.5944, 699.8167,
+      722.0389, 744.2611, 766.4833, 788.7056, 810.9278, 833.1500, 855.3722, 877.5944,
+      899.8167, 922.0389, 944.2611, 966.4833, 988.7056, 1010.9278, 1033.1500, 1055.3722,
+      1077.5944, 1087.7873]
+    values: [1.2948, 1.2917, 1.2831, 1.2711, 1.2558, 1.2373, 1.2165, 1.1912, 1.1655, 1.1361,
+      1.1034, 1.0692, 1.0331, 0.9950, 0.9503, 0.9037, 0.8577, 0.8106, 0.7667, 0.7325,
+      0.7022, 0.6742, 0.6520, 0.6355, 0.6250, 0.6180, 0.6144, 0.6125, 0.6105, 0.6105,
+      0.6105, 0.6105, 0.6126, 0.6125, 0.6103, 0.6074, 0.6002, 0.5936, 0.5853, 0.5727,
+      0.5575, 0.5418, 0.5245, 0.5046, 0.4833, 0.4601, 0.4356, 0.4117, 0.3909, 0.3804]
+
+forms:
+  'sheet and strip':
+    conditions:
+      annealed:
+        specification: 'AMS 5513'
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 503.    # 73 ksi, in the weakest (L) direction
+            basis: S
+            reference: mmpds01
+            variations_with_state:
+              thermal:
+                <<: *annealed_strength_tensile_ultimate_thermal
+          strength_tensile_yeild:
+            units: MPa
+            default_value: 179.    # 26 ksi, in the weakest (L) direction
+            basis: S
+            reference: mmpds01
+            variations_with_state:
+              thermal:
+                <<: *annealed_strength_tensile_yield_thermal
