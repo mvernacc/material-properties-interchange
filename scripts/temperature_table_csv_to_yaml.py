@@ -19,6 +19,7 @@ def make_yaml_dict(filename, args):
         # Convert to kelvin.
         temperature = (temperature - 32.) * (5./9) + 273.15
     values = data[:, 1]
+    values = values * args.yscale
     yaml_dict = {
         'temperature': [float(x) for x in temperature],
         'values': [float(x) for x in values],
@@ -48,5 +49,6 @@ if __name__ == '__main__':
         description='Convert WebPlotDigitizer CSV to YAML')
     parser.add_argument('in_filename', help='CSV file or directory of csv files.')
     parser.add_argument('-f', '--fahrenheit', help='Use flag if temperature in csv is in Fahrenheit, will be converted to kelvin', action='store_true')
+    parser.add_argument('--yscale', help='Scaling factor for y-axis data', type=float, default=1.0)
     arguments = parser.parse_args()
     main(arguments)
