@@ -92,7 +92,7 @@ class VariationWithState:
         self.value_type = value_type
         self.reference = reference
 
-    def query(self, state):
+    def query_value(self, state):
         """Query the variation with state model at a particular state.""" 
         pass
 
