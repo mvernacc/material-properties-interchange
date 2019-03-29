@@ -14,7 +14,7 @@ class TestCreatInterpArrays(unittest.TestCase):
         # Setup
         yaml_dict = {
             'state_vars': ['exposure time', 'temperature'],
-            'state_vars_units': ['hour', 'kelvin'],
+            'state_vars_units': {'exposure time': 'hour', 'temperature': 'kelvin'},
             'value_type': 'multiplier',
             'representation': 'table',
             'exposure time': {
@@ -60,7 +60,7 @@ class TestBuildFromYaml(unittest.TestCase):
         # Setup
         yaml_dict = {
             'state_vars': ['temperature'],
-            'state_vars_units': ['kelvin'],
+            'state_vars_units': {'temperature': 'kelvin'},
             'value_type': 'multiplier',
             'representation': 'table',
             'reference': 'mmpds',
@@ -81,7 +81,7 @@ class TestBuildFromYaml(unittest.TestCase):
         # Setup
         yaml_dict = {
             'state_vars': ['exposure time', 'temperature'],
-            'state_vars_units': ['hour', 'kelvin'],
+            'state_vars_units': {'exposure time': 'hour', 'temperature': 'kelvin'},
             'value_type': 'multiplier',
             'representation': 'table',
             'reference': 'mmpds',
@@ -114,7 +114,7 @@ class TestVariationWithStateTable(unittest.TestCase):
         """Test queries on a 1-d lookup table."""
         # Setup
         state_model = vstate.VariationWithStateTable(
-            ['temperature'], ['kelvin'], 'multiplier', 'reference',
+            ['temperature'], {'temperature': 'kelvin'}, 'multiplier', 'reference',
             np.arange(4), np.arange(4)**2,
             ['linear'])
 
@@ -150,7 +150,7 @@ class TestVariationWithStateTable(unittest.TestCase):
             yaml_dict, state_vars, scales)
 
         state_model = vstate.VariationWithStateTable(
-            state_vars, ['hour', 'kelvin'], 'multiplier', 'reference',
+            state_vars, {'exposure time': 'hour', 'temperature': 'kelvin'}, 'multiplier', 'reference',
             interp_points, interp_values,
             scales)
 
@@ -183,7 +183,7 @@ class TestVariationWithStateTable(unittest.TestCase):
         """Test get_state_domain on a 1-d lookup table."""
         # Setup
         state_model = vstate.VariationWithStateTable(
-            ['temperature'], ['kelvin'], 'multiplier', 'reference',
+            ['temperature'], {'temperature': 'kelvin'}, 'multiplier', 'reference',
             np.arange(4), np.arange(4)**2,
             ['linear'])
 
@@ -219,7 +219,7 @@ class TestVariationWithStateTable(unittest.TestCase):
             yaml_dict, state_vars, scales)
 
         state_model = vstate.VariationWithStateTable(
-            state_vars, ['hour', 'kelvin'], 'multiplier', 'reference',
+            state_vars, {'exposure time': 'hour', 'temperature': 'kelvin'}, 'multiplier', 'reference',
             interp_points, interp_values,
             scales)
 
@@ -257,7 +257,7 @@ class TestVariationWithStateTable(unittest.TestCase):
             yaml_dict, state_vars, scales)
 
         state_model = vstate.VariationWithStateTable(
-            state_vars, ['hour', 'kelvin'], 'multiplier', 'reference',
+            state_vars, {'exposure time': 'hour', 'temperature': 'kelvin'}, 'multiplier', 'reference',
             interp_points, interp_values,
             scales)
 

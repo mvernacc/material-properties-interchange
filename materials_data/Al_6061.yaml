@@ -38,7 +38,7 @@ common_properties: &common_properties
     variations_with_state:
       thermal:
         state_vars: ['temperature']
-        state_vars_units: ['kelvin']
+        state_vars_units: {'temperature': 'kelvin'}
         value_type: multiplier    # multiplier or override
         representation: table    # tables for now, may add NIST polynomials later
         reference: 'mmpds'
@@ -55,7 +55,7 @@ common_state_variations:    # State variations that are common between forms or 
   T6_strength_tensile_ultimate: &T6_strength_tensile_ultimate
     thermal:
       state_vars: ['exposure time', 'temperature']
-      state_vars_units: ['hour', 'kelvin']
+      state_vars_units: {'exposure time': 'hour', 'temperature': 'kelvin'}
       state_vars_interp_scales: ['log', 'linear']
       value_type: multiplier
       representation: table

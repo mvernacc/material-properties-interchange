@@ -54,9 +54,8 @@ def plot_property_vs_state(prop, state_model=None, state_name=None, state_range=
 
     axes.plot(states, values, **pyplot_kwargs)
 
-    index = prop.variations_with_state[state_model].state_vars.index(state_name)
     axes.set_xlabel('{:s} [{:s}]'.format(
-        state_name, prop.variations_with_state[state_model].state_vars_units[index]))
+        state_name, prop.variations_with_state[state_model].state_vars_units[state_name]))
     axes.set_ylabel('{:s} [{:s}]'.format(
         prop.name.replace('_', ' '), prop.units))
 

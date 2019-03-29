@@ -41,7 +41,7 @@ class TestBuildProperties(unittest.TestCase):
                 'variations_with_state': {
                     'thermal': {
                         'state_vars': ['temperature'],
-                        'state_vars_units': ['kelvin'],
+                        'state_vars_units': {'temperature': 'kelvin'},
                         'value_type': 'multiplier',
                         'representation': 'table',
                         'reference': 'mmpds',

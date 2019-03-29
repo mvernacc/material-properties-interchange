@@ -79,11 +79,24 @@ def _create_interp_arrays_from_yaml_table(yaml_dict, state_vars, state_vars_inte
 
 
 class VariationWithState:
-    """A model of a material property's variation with state."""
+    """A model of a material property's variation with state.
+
+    Arguments:
+        representation (string): Description of how the data is represented, e.g. "table".
+        state_vars (list of string): Names of the state variables.
+        state_vars_units (dict of string): Units of measure for each state variable.
+        value_type (string): Is the stored value a multiplier on the default value,
+            or does it override the default value?
+        reference (string): Bibtex tag for the source of the data.
+
+    """
     def __init__(self, representation, state_vars, state_vars_units, value_type, reference):
         self.representation = representation
         self.state_vars = state_vars
         self.state_vars_units = state_vars_units
+        for sv in self.state_vars:
+            if not sv in self.state_vars_units:
+                raise ValueError('No units given for {:s}'.format(sv))
         allowed_value_types = ['multiplier', 'override']
         if value_type not in allowed_value_types:
             raise ValueError(
@@ -103,11 +116,11 @@ class VariationWithState:
     def __str__(self):
         state_var_str = ', '.join(self.state_vars)
         domain_str_list = []
-        for i, name in enumerate(self.state_vars):
-            domain = self.get_state_domain()    #pylint: disable=assignment-from-no-return
+        domain = self.get_state_domain()    #pylint: disable=assignment-from-no-return
+        for name in self.state_vars:
             domain_str_list.append(
                 '{:.4g} to {:.4g} {:s}'.format(
-                    domain[name][0], domain[name][1], self.state_vars_units[i]))
+                    domain[name][0], domain[name][1], self.state_vars_units[name]))
         domain_str = ', '.join(domain_str_list)
         return 'Variation with {:s} over {:s}, represented as a {:s}. [Data from {:s}]'.format(
             state_var_str, domain_str, self.representation, self.reference)
