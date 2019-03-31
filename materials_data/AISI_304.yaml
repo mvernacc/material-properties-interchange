@@ -22,7 +22,7 @@ references:    # In bibtex format
     @incollection{IrvinBement1967
       author = {J. E. Irvin adn A. L. Bement},
       title = {Nature of Radiation Damage to Engineering Properties of Various Stainless Steel Alloys},
-      booktitle = {Effects of Radiation on Strucutral Materials},
+      booktitle = {Effects of Radiation on Structural Materials},
       publisher = {{America Society for Testing and Materials}},
       year = {1967},
     }
