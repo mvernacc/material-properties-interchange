@@ -13,11 +13,10 @@ def main():
     temperatures = np.array([300, 300+273, 600+273, 700+273, 1023])
     colors = plt.cm.hot(np.linspace(0, 0.5, len(temperatures)))
     for (temp, color) in zip(temperatures, colors):
-        temp_array = np.full_like(dose, temp)
         yts = aisi304['strength_tensile_yield'].query_value(
-            {'temperature': temp_array, 'neutron dose': dose}, 'radiation')
+            {'temperature': temp, 'neutron dose': dose}, 'radiation')
         elong = aisi304['elongation'].query_value(
-            {'temperature': temp_array, 'neutron dose': dose}, 'radiation')
+            {'temperature': temp, 'neutron dose': dose}, 'radiation')
         axes[0, 0].semilogx(dose, yts, label='$T={:.0f}$ K'.format(temp), color=color)
         axes[1, 0].semilogx(dose, elong, label='$T={:.0f}$ K'.format(temp), color=color)
     xunits = aisi304['strength_tensile_yield']['radiation'].state_vars_units['neutron dose']
@@ -42,11 +41,10 @@ def main():
 
     colors = plt.cm.viridis(np.linspace(0, 0.75, len(doses)))
     for (dose, color) in zip(doses, colors):
-        dose_array = np.full_like(temperature, dose)
         yts = aisi304['strength_tensile_yield'].query_value(
-            {'temperature': temperature, 'neutron dose': dose_array}, 'radiation')
+            {'temperature': temperature, 'neutron dose': dose}, 'radiation')
         elong = aisi304['elongation'].query_value(
-            {'temperature': temperature, 'neutron dose': dose_array}, 'radiation')
+            {'temperature': temperature, 'neutron dose': dose}, 'radiation')
         axes[0, 1].plot(temperature, yts, label='dose={:.1e} cm^-2'.format(dose), color=color)
         axes[1, 1].plot(temperature, elong, label='dose={:.1e} cm^-2'.format(dose), color=color)
     axes[0, 1].legend()

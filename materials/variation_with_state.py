@@ -1,8 +1,8 @@
 """Classes for represernting the variaton of material properties with state."""
 
+import copy
 import numpy as np
 import scipy.interpolate
-
 
 def _create_interp_arrays_from_yaml_table_2d(yaml_dict, state_vars, state_vars_interp_scales):
     """Create 2d interpolation arrays for `griddata` from a YAML dict.
@@ -139,27 +139,56 @@ class VariationWithStateTable(VariationWithState):
         """Query the value of the property at a particular state.
 
         Arguments:
-            state (dict): TODO
+            state (dict): The state at which to query the values. It must have
+                a key for each variable name in `self.state_vars`. `state[s1]`
+                specifies the query point for state variable `s1`. The query point
+                for each state may be an array or a scalar. e.g.
+                    `state={'s1': 0, 's2': 1}`
+                    `state={'s1': 0, 's2': [1, 2, 3]}`
+                    and
+                    `state={'s1': [5, 6, 7], 's2': [1, 2, 3]}`
+                are all valid.
+        `method`, `fill_value`, and `rescale` are passed through to `scipy.interpolate.griddata`.
 
         Returns:
-            scalar: value of the property at the provided state.
+            scalar or array: value(s) of the property at the provided state(s).
         """
         # Check that all the state variables have been provided in `state`.
         for var_name in self.state_vars:
             if var_name not in state.keys():
                 raise ValueError('{:s} not provided for query'.format(var_name))
 
+        # Copy the state argument - we might need to mutate it.
+        state = copy.deepcopy(state)
+
         # Form an array of points at which to query the interpolation.
+        is_state_scalar = True
         if len(self.state_vars) == 1:
             query_points = np.array(state[self.state_vars[0]])
+            if hasattr(query_points, '__len__'):
+                is_state_scalar = False
             if self._state_vars_interp_scales[0] == 'log':
                 query_points = np.log(query_points)
         elif len(self.state_vars) == 2:
+            # Handle cases with 1 array and 1 scalar state
+            if hasattr(state[self.state_vars[0]], '__len__') \
+            and not hasattr(state[self.state_vars[1]], '__len__'):
+                state[self.state_vars[1]] = np.full_like(
+                    state[self.state_vars[0]], state[self.state_vars[1]])
+            if not hasattr(state[self.state_vars[0]], '__len__') \
+            and hasattr(state[self.state_vars[1]], '__len__'):
+                state[self.state_vars[0]] = np.full_like(
+                    state[self.state_vars[1]], state[self.state_vars[0]])
+            # Handle case where both state queries are arrays
+            # This is intentionally *not* an `elif` - the above cases should
+            # flow into this.
             if hasattr(state[self.state_vars[0]], '__len__') \
             and hasattr(state[self.state_vars[1]], '__len__'):
                 assert len(state[self.state_vars[0]]) == len(state[self.state_vars[1]])
+                is_state_scalar = False
                 query_points = np.stack(
                     (state[self.state_vars[0]], state[self.state_vars[1]]), axis=1)
+            # Handle case where both state queries are scalars
             else:
                 query_points = np.array([[state[self.state_vars[0]], state[self.state_vars[1]]]])
 
@@ -172,7 +201,8 @@ class VariationWithStateTable(VariationWithState):
         values = scipy.interpolate.griddata(self._interp_points, self._interp_values,
                                             query_points,
                                             method=method, fill_value=fill_value, rescale=rescale)
-
+        if is_state_scalar:
+            return values[0]
         return values
 
     def get_state_domain(self):

@@ -166,8 +166,13 @@ class TestVariationWithStateTable(unittest.TestCase):
         result = state_model.query_value({'exposure time': 0.05, 'temperature': 2}, method='linear')
         self.assertAlmostEqual(result, (2**2 + 2.5**2)/2)
 
+        # Check that a scalar query returns a scalar
+        result = state_model.query_value({'exposure time': 0, 'temperature': 1})
+        self.assertFalse(hasattr(result, '__len__'))
+
         # Check query of multiple points
         result = state_model.query_value({'exposure time': [0, 0.05], 'temperature': [1, 2]})
+        self.assertTrue(hasattr(result, '__len__'))
         self.assertEqual(result[0], 1**2)
         self.assertAlmostEqual(result[1], (2**2 + 2.5**2)/2)
 

@@ -22,9 +22,8 @@ def main():
 
     plt.figure()
     for exp_time in [0.5, 10, 100, 1000, 10000]:    # exposure time [units: hour].
-        time = np.full_like(temperature, exp_time)
         uts = al6061['strength_tensile_ultimate'].query_value(
-            {'temperature': temperature, 'exposure time': time})
+            {'temperature': temperature, 'exposure time': exp_time})
 
         plt.plot(temperature, uts, label=al6061.name + ', {:.0f} hr exposure'.format(exp_time))
     plt.legend()
