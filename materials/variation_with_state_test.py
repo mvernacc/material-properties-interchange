@@ -285,8 +285,9 @@ class TestVariationWithStateTable(unittest.TestCase):
         string = str(state_model)
 
         # Verification
-        # TODO automate checking this?
-        print(string)
+        desired_string = ('Variation with exposure time, temperature over 0 to 0.1 hour, 0 to 3 kelvin,'
+            + ' represented as a table. [Data from reference]')
+        self.assertEqual(string, desired_string)
 
 
 if __name__ == '__main__':
