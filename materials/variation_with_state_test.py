@@ -212,7 +212,7 @@ class TestVariationWithStateTable(unittest.TestCase):
 
         # Verification
         self.assertEqual(len(domain), 1)
-        self.assertTrue('temperature' in domain)
+        self.assertIn('temperature', domain)
         self.assertEqual(domain['temperature'][0], 0)
         self.assertEqual(domain['temperature'][1], 3)
 
@@ -248,8 +248,8 @@ class TestVariationWithStateTable(unittest.TestCase):
 
         # Verification
         self.assertEqual(len(domain), 2)
-        self.assertTrue('exposure time' in domain)
-        self.assertTrue('temperature' in domain)
+        self.assertIn('exposure time', domain)
+        self.assertIn('temperature', domain)
         self.assertEqual(domain['exposure time'][0], 0.0)
         self.assertEqual(domain['exposure time'][1], 0.1)
         self.assertEqual(domain['temperature'][0], 0)
