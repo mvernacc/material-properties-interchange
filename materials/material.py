@@ -103,6 +103,7 @@ class Material:
         VALUE_IND = 1
         MIN_IND = 0
         MAX_IND = 1
+        element_percent_format_str = '   {:2.2f}'
         string = 'Elemental composition:\n'
         sorted_by_max_mass = sorted(
             self.elemental_composition.items(), key=lambda kv: kv[VALUE_IND][MAX_IND], reverse=True)
@@ -111,10 +112,10 @@ class Material:
             string += '{:>7}'.format(pair[ELEM_IND])
         string += '\nMax % by mass: '
         for pair in sorted_by_max_mass:
-            string += '   {:2.2f}'.format(pair[VALUE_IND][MAX_IND])
+            string += element_percent_format_str.format(pair[VALUE_IND][MAX_IND])
         string += '\nMin % by mass: '
         for pair in sorted_by_max_mass:
-            string += '   {:2.2f}'.format(pair[VALUE_IND][MIN_IND])
+            string += element_percent_format_str.format(pair[VALUE_IND][MIN_IND])
         return string
 
     def __str__(self):
