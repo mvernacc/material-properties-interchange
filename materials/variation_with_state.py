@@ -165,26 +165,28 @@ class VariationWithStateTable(VariationWithState):
         is_state_scalar = True
         if len(self.state_vars) == 1:
             query_points = np.array(state[self.state_vars[0]])
-            if hasattr(query_points, '__len__'):
+            if np.ndim(query_points) > 0:
                 is_state_scalar = False
             if self._state_vars_interp_scales[0] == 'log':
                 query_points = np.log(query_points)
         elif len(self.state_vars) == 2:
             # Handle cases with 1 array and 1 scalar state
-            if hasattr(state[self.state_vars[0]], '__len__') \
-            and not hasattr(state[self.state_vars[1]], '__len__'):
+            # by using `np.full_like` to convert the scalar state to an array
+            if np.ndim(state[self.state_vars[0]]) > 0 \
+            and np.ndim(state[self.state_vars[1]]) == 0:
                 state[self.state_vars[1]] = np.full_like(
                     state[self.state_vars[0]], state[self.state_vars[1]])
-            if not hasattr(state[self.state_vars[0]], '__len__') \
-            and hasattr(state[self.state_vars[1]], '__len__'):
+            if np.ndim(state[self.state_vars[0]]) == 0 \
+            and np.ndim(state[self.state_vars[1]]) > 0:
                 state[self.state_vars[0]] = np.full_like(
                     state[self.state_vars[1]], state[self.state_vars[0]])
             # Handle case where both state queries are arrays
             # This is intentionally *not* an `elif` - the above cases should
             # flow into this.
-            if hasattr(state[self.state_vars[0]], '__len__') \
-            and hasattr(state[self.state_vars[1]], '__len__'):
-                assert len(state[self.state_vars[0]]) == len(state[self.state_vars[1]])
+            if np.ndim(state[self.state_vars[0]]) > 0 \
+            and np.ndim(state[self.state_vars[1]]) > 0:
+                if len(state[self.state_vars[0]]) != len(state[self.state_vars[1]]):
+                    raise ValueError('Query arrays must be of equal length for each state.')
                 is_state_scalar = False
                 query_points = np.stack(
                     (state[self.state_vars[0]], state[self.state_vars[1]]), axis=1)
@@ -201,7 +203,7 @@ class VariationWithStateTable(VariationWithState):
         values = scipy.interpolate.griddata(self._interp_points, self._interp_values,
                                             query_points,
                                             method=method, fill_value=fill_value, rescale=rescale)
-        if is_state_scalar:
+        if is_state_scalar and np.ndim(values) > 0:
             return values[0]
         return values
 

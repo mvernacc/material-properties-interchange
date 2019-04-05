@@ -124,6 +124,10 @@ class TestVariationWithStateTable(unittest.TestCase):
         self.assertEqual(state_model.query_value({'temperature': 2}), 2**2)
         # Check interpolation between given points
         self.assertAlmostEqual(state_model.query_value({'temperature': 2.5}, method='linear'), 6.5)
+        # Check query of multiple points
+        result = state_model.query_value({'temperature': [1, 2]})
+        self.assertEqual(result[0], 1**2)
+        self.assertEqual(result[1], 2**2)
         # Check bad query
         with self.assertRaises(ValueError):
             state_model.query_value({'fish': 1.})    # fish is not a state variable.
@@ -168,11 +172,19 @@ class TestVariationWithStateTable(unittest.TestCase):
 
         # Check that a scalar query returns a scalar
         result = state_model.query_value({'exposure time': 0, 'temperature': 1})
-        self.assertFalse(hasattr(result, '__len__'))
+        self.assertTrue(np.ndim(result) == 0)
 
+        # Check query of multiple points, with one scalar state
+        result = state_model.query_value({'exposure time': 0, 'temperature': [1, 2]})
+        self.assertTrue(np.ndim(result) > 0)
+        self.assertEqual(result[0], 1**2)
+        self.assertAlmostEqual(result[1], 2**2)
+        result = state_model.query_value({'exposure time': [0, 0.05], 'temperature': 1})
+        self.assertTrue(np.ndim(result) > 0)
+        self.assertEqual(len(result), 2)
         # Check query of multiple points
         result = state_model.query_value({'exposure time': [0, 0.05], 'temperature': [1, 2]})
-        self.assertTrue(hasattr(result, '__len__'))
+        self.assertTrue(np.ndim(result) > 0)
         self.assertEqual(result[0], 1**2)
         self.assertAlmostEqual(result[1], (2**2 + 2.5**2)/2)
 
@@ -183,6 +195,9 @@ class TestVariationWithStateTable(unittest.TestCase):
         with self.assertRaises(ValueError):
             # fish is not a state variable.
             state_model.query_value({'fish': 1., 'exposure time': 1})
+        with self.assertRaises(ValueError):
+            # fish is not a state variable.
+            state_model.query_value({'exposure time': [0, 0.05], 'temperature': [1, 2, 3]})
 
     def test_domain_1d(self):
         """Test get_state_domain on a 1-d lookup table."""
