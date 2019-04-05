@@ -99,18 +99,22 @@ class Material:
 
     def elements_table_str(self):
         """Create (as a string) a table of the elemental composition data."""
+        ELEM_IND = 0
+        VALUE_IND = 1
+        MIN_IND = 0
+        MAX_IND = 1
         string = 'Elemental composition:\n'
         sorted_by_max_mass = sorted(
-            self.elemental_composition.items(), key=lambda kv: kv[1][1], reverse=True)
+            self.elemental_composition.items(), key=lambda kv: kv[VALUE_IND][MAX_IND], reverse=True)
         string += 'Element:       '
         for pair in sorted_by_max_mass:
-            string += '{:>7}'.format(pair[0])
+            string += '{:>7}'.format(pair[ELEM_IND])
         string += '\nMax % by mass: '
         for pair in sorted_by_max_mass:
-            string += '   {:2.2f}'.format(pair[1][1])
+            string += '   {:2.2f}'.format(pair[VALUE_IND][MAX_IND])
         string += '\nMin % by mass: '
         for pair in sorted_by_max_mass:
-            string += '   {:2.2f}'.format(pair[1][0])
+            string += '   {:2.2f}'.format(pair[VALUE_IND][MIN_IND])
         return string
 
     def __str__(self):
