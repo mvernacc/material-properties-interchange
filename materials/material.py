@@ -14,7 +14,7 @@ def build_properties(properties_dict_yaml):
     """
     properties_dict_py = {}    # Dictionary of properties as python objects
     for property_name, property_dict in properties_dict_yaml.items():
-        if 'variation_with_state' in property_dict:
+        if 'variations_with_state' in property_dict:
             prop = StateDependentProperty(property_name, property_dict)
         else:
             prop = Property(property_name, property_dict)
@@ -26,7 +26,7 @@ def build_properties(properties_dict_yaml):
 class Material:
     """An engineering material, in a particular form and condition."""
     def __init__(self, name, form=None, condition=None, category=None, subcategory=None,
-                 references=None, properties_dict=None):
+                 references=None, properties_dict=None, elemental_composition=None):
         """Create a Material.
 
         We don't recommend using this function directly, instead use
@@ -51,6 +51,8 @@ class Material:
             references (list of string): References from which the material property data was gathered.
                 Each string in the list should be a bibtex entry for one reference.
             properties_dict (dict): A dict of material property data derived from a YAML file.
+            elemental_composition (dict): A dict of material's elemental composition, as [min, max]
+                percent by mass.
 
         References:
             [1] Richard C Rice and Jana L Jackson and John Bakuckas and Steven Thompson,
@@ -63,9 +65,67 @@ class Material:
         self.category = category
         self.subcategory = subcategory
         self.references = references
+        self.elemental_composition = elemental_composition
+        if self.elemental_composition is not None:
+            for element, limits in self.elemental_composition.items():
+                # limits[0] is element minimum percent by mass,
+                # limits[1] is element maximum percent by mass.
+                if not (0. <= limits[0] <= limits[1] <= 100.):
+                    raise ValueError(
+                        'Elemental composition limits on {:s} are not valid: '.format(element)
+                        + 'min = {:.3f} %, max = {:.3f} %'.format(*limits))
 
         if properties_dict is not None:
             self.properties = build_properties(properties_dict)
+
+    def __getitem__(self, key):
+        """Get a property of the material by name.
+        A Material is primarily a collection of properties, so we use []
+        as a shorthand to access a property.
+        i.e. `mat[key]` is a shorthand for `mat.properties[key]`.
+
+        Argument:
+            key (string): the name of a property.
+
+        Returns:
+            Property: `self.properties[key]`
+        """
+        if key not in self.properties:
+            raise KeyError(
+                'This Material does not have a {:s} property'.format(key)
+                + '\nThe valid keys are {}'.format(self.properties.keys())
+                )
+        return self.properties[key]
+
+    def elements_table_str(self):
+        """Create (as a string) a table of the elemental composition data."""
+        ELEM_IND = 0
+        VALUE_IND = 1
+        MIN_IND = 0
+        MAX_IND = 1
+        element_percent_format_str = '   {:2.2f}'
+        string = 'Elemental composition:\n'
+        sorted_by_max_mass = sorted(
+            self.elemental_composition.items(), key=lambda kv: kv[VALUE_IND][MAX_IND], reverse=True)
+        string += 'Element:       '
+        for pair in sorted_by_max_mass:
+            string += '{:>7}'.format(pair[ELEM_IND])
+        string += '\nMax % by mass: '
+        for pair in sorted_by_max_mass:
+            string += element_percent_format_str.format(pair[VALUE_IND][MAX_IND])
+        string += '\nMin % by mass: '
+        for pair in sorted_by_max_mass:
+            string += element_percent_format_str.format(pair[VALUE_IND][MIN_IND])
+        return string
+
+    def __str__(self):
+        string = self.name
+        string += '\n' + '-'*len(self.name) + '\n'
+        string += '{:s}, {:s}\n'.format(self.category, self.subcategory)
+        string += '\n' + self.elements_table_str() + '\n\n'
+        string += 'Properties for the "{:s}" form, "{:s}" condition:\n'.format(self.form, self.condition)
+        string += '\n\n'.join([str(prop) for prop in self.properties.values()])
+        return string
 
 
 def load_from_yaml(filename, form, condition):
@@ -105,10 +165,11 @@ def load_from_yaml(filename, form, condition):
     else:
         subcategory = None
     references = matl_dict['references']
+    elemental_composition = matl_dict['elemental_composition']
 
     properties_dict = matl_dict['forms'][form]['conditions'][condition]['properties']
 
     matl = Material(name, form, condition, category, subcategory,
-                    references, properties_dict)
+                    references, properties_dict, elemental_composition)
 
     return matl

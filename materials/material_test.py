@@ -4,6 +4,8 @@ import unittest
 import numpy as np
 from materials import Material, load_from_yaml, get_database_dir
 from material import build_properties
+from materials.property import Property
+
 
 class TestBuildProperties(unittest.TestCase):
     """Unit tests for build_properties."""
@@ -36,13 +38,16 @@ class TestBuildProperties(unittest.TestCase):
                 'default_value': dv,
                 'units': 'MPa',
                 'reference': 'mmpds',
-                'variation_with_state': {
-                    'state_vars': ['temperature'],
-                    'state_vars_units': ['kelvin'],
-                    'value_type': 'multiplier',
-                    'representation': 'table',
-                    'temperature': np.arange(4),
-                    'values': np.arange(4)**2,
+                'variations_with_state': {
+                    'thermal': {
+                        'state_vars': ['temperature'],
+                        'state_vars_units': {'temperature': 'kelvin'},
+                        'value_type': 'multiplier',
+                        'representation': 'table',
+                        'reference': 'mmpds',
+                        'temperature': np.arange(4),
+                        'values': np.arange(4)**2,
+                    }
                 }
             }
         }
@@ -79,6 +84,24 @@ class TestMaterial(unittest.TestCase):
         self.assertEqual(matl.name, 'name')
         self.assertTrue(matl.category is None)
 
+    def test_getitem(self):
+        """Unit test for __getitem__"""
+        # Setup
+        yaml_dict = {
+            'density': {
+                'default_value': 1000.,
+                'units': 'kg m^-3',
+                'reference': 'mmpds'
+                }
+            }
+        matl = Material('name', properties_dict=yaml_dict)
+
+        # Action
+        prop = matl['density']
+
+        # Verification
+        self.assertTrue(issubclass(type(prop), Property))
+
 
 class TestLoadFromYaml(unittest.TestCase):
     """Unit tests for load_from_yaml."""
@@ -96,7 +119,7 @@ class TestLoadFromYaml(unittest.TestCase):
         self.assertEqual(al6061.properties['youngs_modulus'].units, 'GPa')
         result = al6061.properties['youngs_modulus'].query_value({'temperature': 294})
         self.assertAlmostEqual(result, 68.3, delta=0.5)
-
+        print('\n' + str(al6061) + '\n')        
 
 
 if __name__ == '__main__':

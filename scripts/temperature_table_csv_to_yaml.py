@@ -7,7 +7,10 @@ import numpy as np
 
 # See https://stackoverflow.com/a/33944926
 def float_representer(dumper, value):
-    text = '{0:.4f}'.format(value)
+    if abs(value) < 1e6:
+        text = '{0:.4f}'.format(value)
+    else:
+        text = '{:.4e}'.format(value)
     return dumper.represent_scalar(u'tag:yaml.org,2002:float', text)
 yaml.add_representer(float, float_representer)
 
@@ -19,6 +22,7 @@ def make_yaml_dict(filename, args):
         # Convert to kelvin.
         temperature = (temperature - 32.) * (5./9) + 273.15
     values = data[:, 1]
+    values = values * args.yscale
     yaml_dict = {
         'temperature': [float(x) for x in temperature],
         'values': [float(x) for x in values],
@@ -48,5 +52,6 @@ if __name__ == '__main__':
         description='Convert WebPlotDigitizer CSV to YAML')
     parser.add_argument('in_filename', help='CSV file or directory of csv files.')
     parser.add_argument('-f', '--fahrenheit', help='Use flag if temperature in csv is in Fahrenheit, will be converted to kelvin', action='store_true')
+    parser.add_argument('--yscale', help='Scaling factor for y-axis data', type=float, default=1.0)
     arguments = parser.parse_args()
     main(arguments)

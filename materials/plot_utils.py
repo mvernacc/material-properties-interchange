@@ -4,12 +4,13 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-def plot_property_vs_state(prop, state_name, state_range=None,
+def plot_property_vs_state(prop, state_model=None, state_name=None, state_range=None,
                            value_for_other_state=None, axes=None, **pyplot_kwargs):
     """Plot a state-dependent property.
 
     Arguments:
         prop (Property): The property to plot.
+        state_model (string): The name of the state model to plot from (i.e. a key of `variations_with_state`)
         state_name (string): Name of the state variable to plot the property value against.
         state_range (tuple of length 2): Range of state variable values to plot over (low, high).
         value_for_other_state (scalar): If the property depends on two states, fix the
@@ -21,16 +22,23 @@ def plot_property_vs_state(prop, state_name, state_range=None,
     Returns:
         matplotlib.axes.Axes: The axes on which the plot was drawn.
     """
-    if len(prop.state_vars) > 1 and value_for_other_state is None:
+    if state_model is None:
+        state_model = prop.default_state_model
+    if state_model not in prop.variations_with_state:
+        raise ValueError('Property {:s} does not have a variation with state model named {:s}'.format(
+            prop.name, state_model))
+    if state_name is None:
+        state_name = prop.variations_with_state[state_model].state_vars[0]
+    if len(prop.variations_with_state[state_model].state_vars) > 1 and value_for_other_state is None:
         raise ValueError('Property depends on more than one state. Must provide value_for_other_state.')
-    if len(prop.state_vars) == 1 and value_for_other_state is not None:
+    if len(prop.variations_with_state[state_model].state_vars) == 1 and value_for_other_state is not None:
         raise ValueError('Property only depends on one state, do not provide value_for_other_state.')
 
-    if state_name not in prop.state_vars:
-        raise ValueError('Property does not have a state avriable named {:s}'.format(state_name))
+    if state_name not in prop.variations_with_state[state_model].state_vars:
+        raise ValueError('Property does not have a state variable named {:s}'.format(state_name))
 
     if state_range is None:
-        state_range = prop.get_state_domain()[state_name]
+        state_range = prop.variations_with_state[state_model].get_state_domain()[state_name]
 
     if axes is None:
         plt.figure()
@@ -42,15 +50,17 @@ def plot_property_vs_state(prop, state_name, state_range=None,
         other_state_name = (set(prop.state_vars) - set((state_name,))).pop()
         query[other_state_name] = np.full_like(states, value_for_other_state)
 
-    values = prop.query_value(query)
+    values = prop.query_value(query, state_model)
 
     axes.plot(states, values, **pyplot_kwargs)
 
-    index = prop.state_vars.index(state_name)
-    axes.set_xlabel('{:s} [{:s}]'.format(state_name, prop.state_vars_units[index]))
-    axes.set_ylabel('{:s} [{:s}]'.format(prop.name.replace('_', ' '), prop.units))
+    axes.set_xlabel('{:s} [{:s}]'.format(
+        state_name, prop.variations_with_state[state_model].state_vars_units[state_name]))
+    axes.set_ylabel('{:s} [{:s}]'.format(
+        prop.name.replace('_', ' '), prop.units))
 
     return axes
+
 
 def decorate_temperature_axis(axes, temperature_range=(0, np.inf), comparison_set='space propulsion'):
     """Decorate temperature axis with comparison temperatures.

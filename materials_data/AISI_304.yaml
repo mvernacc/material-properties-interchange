@@ -1,0 +1,286 @@
+name: AISI 304
+category: metal
+subcategory: stainless steel
+uns_code: S30400
+
+references:    # In bibtex format
+  - |
+    @techreport{mmpds01,
+      author = {Richard C Rice and Jana L Jackson and John Bakuckas and Steven Thompson},
+      title = {Metallic Materials Properties Development and Standardization (MMPDS)},
+      institution = {U.S. Department of Transportation, Federal Aviation Administration},
+      year = {2001},
+    }
+  - |
+    @online{matweb304,
+      author = {{MatWeb, LLC}},
+      title = {304 Stainless Steel},
+      year = {2019},
+      url = {http://www.matweb.com/search/datasheet.aspx?matguid=abc4415b0f8b490387e3c922237098da}
+    }
+  - |
+    @incollection{IrvinBement1967
+      author = {J. E. Irvin adn A. L. Bement},
+      title = {Nature of Radiation Damage to Engineering Properties of Various Stainless Steel Alloys},
+      booktitle = {Effects of Radiation on Structural Materials},
+      publisher = {{America Society for Testing and Materials}},
+      year = {1967},
+    }
+
+elemental_composition:
+  C: [0, 0.08]
+  Cr: [18., 20.]
+  Fe: [66.345, 74.]
+  Mn: [0, 2.0]
+  Ni: [8.0, 10.5]
+  P: [0, 0.045]
+  Si: [0, 1.]
+  S: [0, 0.03]
+
+common_properties: &common_properties
+  density:
+    units: 'kg m^-3'
+    default_value: 7916.    # 0.286 lbm/in^3
+    reference: mmpds01
+  poissons_ratio:
+    units: dimensionless
+    default_value: 0.27
+    reference: mmpds01
+  youngs_modulus:
+    units: GPa
+    default_value: 200.   # 29.0 msi
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        # Note: this variation-with-temperature data is for AISI 301, a similar grade of austenitic stainless steel.
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': kelvin'}
+        value_type: multiplier
+        representation: table
+        reference: 'mmpds01'
+        temperature: [295., 922.]
+        values: [1.0, 0.78]
+  thermal_expansion_linear:
+    # Note: this data is for AISI 301, a similar grade of austenitic stainless steel.
+    units: '1e-6 K^-1'
+    default_value: 15.5
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': kelvin'}
+        value_type: override
+        representation: table
+        reference: 'mmpds01'
+        temperature: [19.1150, 33.1500, 60.9278, 88.7056, 116.4833, 144.2611, 172.0389, 199.8167,
+          227.5944, 255.3722, 283.1500, 310.9278, 338.7056, 366.4833, 394.2611, 422.0389,
+          449.8167, 477.5944, 505.3722, 533.1500, 560.9278, 588.7056, 616.4833, 644.2611,
+          672.0389, 699.8167, 727.5944, 755.3722, 783.1500, 810.9278, 838.7056, 866.4833,
+          894.2611, 922.0389, 949.8167, 977.5944, 1005.3722, 1033.1500, 1060.9278, 1088.7056,
+          1116.4833, 1141.9217]
+        values: [9.7290, 10.3140, 11.2266, 12.1230, 12.8070, 13.3992, 13.9140, 14.3568, 14.7420,
+          15.0822, 15.3882, 15.6762, 15.9390, 16.1856, 16.4160, 16.6284, 16.8318, 17.0208,
+          17.1990, 17.3718, 17.5338, 17.6886, 17.8254, 17.9640, 18.1044, 18.2376, 18.3564,
+          18.4824, 18.6084, 18.7218, 18.8424, 18.9522, 19.0512, 19.1574, 19.2510, 19.3482,
+          19.4400, 19.5282, 19.6038, 19.6938, 19.7730, 19.8342]
+  heat_capacity:
+    # Note: this data is for AISI 301, a similar grade of austenitic stainless steel.
+    units: 'J kg^-1 K^-1'
+    default_value: 448.
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': kelvin'}
+        value_type: override
+        representation: table
+        reference: 'mmpds01'
+        temperature: [83.1500, 110.9278, 138.7056, 166.4833, 194.2611, 222.0389, 249.8167,
+          277.5944, 305.3722, 333.1500, 360.9278, 388.7056, 416.4833, 444.2611, 472.0389,
+          499.8167, 527.5944, 555.3722, 583.1500, 610.9278, 638.7056, 666.4846, 694.2611,
+          722.0389, 749.8167, 777.5944, 805.3734, 833.1500, 860.9278, 888.6994, 916.4759,
+          944.2562, 972.0451, 999.8241, 1027.5944, 1055.3734, 1083.1537, 1110.9278, 1140.1789]
+        values: [290.5778, 317.3746, 342.9153, 368.8747, 391.0658, 409.0699, 427.9114, 444.2407,
+          457.6391, 472.2936, 486.9481, 496.1595, 506.6270, 512.9075, 522.9563, 528.8181,
+          534.6799, 540.1230, 548.0783, 554.3588, 558.5458, 561.4767, 566.5011, 570.2694,
+          575.2938, 579.4808, 584.0865, 589.1109, 594.1353, 600.8345, 605.0215, 611.3020,
+          615.4890, 619.6760, 623.0256, 626.7939, 630.1435, 631.3996, 634.7492]
+  thermal_conductivity:
+    # Note: this data is for AISI 301, a similar grade of austenitic stainless steel.
+    units: 'W m^-1 K^-1'
+    default_value: 16.2
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': kelvin'}
+        value_type: override
+        representation: table
+        reference: 'mmpds01'
+        temperature:  [146.3061, 166.4833, 194.2611, 222.0389, 249.8167, 277.5944, 305.3722,
+          333.1500, 360.9278, 388.7056, 1027.5944, 1055.3722, 1083.1500, 1110.9278, 1137.9265]
+        values: [10.2332, 11.2847, 12.5776, 13.5702, 14.4056, 15.0720, 15.7684, 16.2065, 16.5459,
+          16.9167, 25.0857, 25.4769, 25.7744, 26.1765, 26.4377]
+
+common_state_variations:    # State variations that are common between forms or conditions.
+  annealed_strength_tensile_ultimate_thermal: &annealed_strength_tensile_ultimate_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': kelvin'}
+    value_type: multiplier
+    representation: table
+    reference: 'mmpds01'
+    note: 'For exposure times up to 0.5 hour'
+    temperature: [4.7812, 55.3722, 77.5944, 99.8167, 122.0389, 144.2611, 166.4833, 188.7056,
+      210.9278, 233.1500, 255.3722, 277.5944, 299.8167, 322.0389, 344.2611, 366.4833,
+      388.7056, 410.9278, 433.1500, 455.3722, 477.5944, 499.8167, 522.0389, 544.2611,
+      566.4833, 588.7056, 610.9278, 633.1500, 655.3722, 677.5944, 699.8167, 722.0389,
+      744.2611, 766.4833, 788.7056, 810.9278, 833.1500, 855.3722, 877.5944, 899.8167,
+      922.0389, 944.2611, 966.4833, 988.7056, 1010.9278, 1033.1500, 1055.3722, 1077.5944,
+      1087.5235]
+    values: [2.4203, 2.1803, 2.0741, 1.9601, 1.8480, 1.7442, 1.6374, 1.5249, 1.4148, 1.3108,
+      1.2013, 1.0948, 1.0005, 0.9272, 0.8667, 0.8153, 0.7770, 0.7481, 0.7268, 0.7120,
+      0.7033, 0.6967, 0.6946, 0.6927, 0.6913, 0.6892, 0.6867, 0.6855, 0.6844, 0.6844,
+      0.6831, 0.6755, 0.6672, 0.6567, 0.6453, 0.6328, 0.6161, 0.5975, 0.5760, 0.5506,
+      0.5231, 0.4920, 0.4607, 0.4270, 0.3915, 0.3564, 0.3185, 0.2797, 0.2613]
+  annealed_strength_tensile_yield_thermal: &annealed_strength_tensile_yield_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': kelvin'}
+    value_type: multiplier
+    representation: table
+    reference: 'mmpds01'
+    note: 'For exposure times up to 0.5 hour'
+    temperature: [4.6835, 30.8543, 55.3722, 77.5944, 99.8167, 122.0389, 144.2611, 166.4833,
+      188.7056, 210.9278, 233.1500, 255.3722, 277.5944, 299.8167, 322.0389, 344.2611,
+      366.4833, 388.7056, 410.9278, 433.1500, 455.3722, 477.5944, 499.8167, 522.0389,
+      544.2611, 566.4833, 588.7056, 610.9278, 633.1500, 655.3722, 677.5944, 699.8167,
+      722.0389, 744.2611, 766.4833, 788.7056, 810.9278, 833.1500, 855.3722, 877.5944,
+      899.8167, 922.0389, 944.2611, 966.4833, 988.7056, 1010.9278, 1033.1500, 1055.3722,
+      1077.5944, 1087.7873]
+    values: [1.2948, 1.2917, 1.2831, 1.2711, 1.2558, 1.2373, 1.2165, 1.1912, 1.1655, 1.1361,
+      1.1034, 1.0692, 1.0331, 0.9950, 0.9503, 0.9037, 0.8577, 0.8106, 0.7667, 0.7325,
+      0.7022, 0.6742, 0.6520, 0.6355, 0.6250, 0.6180, 0.6144, 0.6125, 0.6105, 0.6105,
+      0.6105, 0.6105, 0.6126, 0.6125, 0.6103, 0.6074, 0.6002, 0.5936, 0.5853, 0.5727,
+      0.5575, 0.5418, 0.5245, 0.5046, 0.4833, 0.4601, 0.4356, 0.4117, 0.3909, 0.3804]
+  annealed_strength_tensile_yield_radiation: &annealed_strength_tensile_yield_radiation
+    state_vars: ['temperature', 'neutron dose']
+    state_vars_units: {'temperature': 'kelvin', 'neutron dose': 'cm^-2'}
+    state_vars_interp_scales: ['linear', 'log']
+    value_type: override
+    representation: table
+    reference: 'IrvinBement1967'
+    note: 'For irradiation temperature of 290 C. Neutron fluence for energies > 1 MeV.'
+    # Use 1.e-9 instead of 0 in neutron doses so we don't break log.
+    temperature:
+      295:
+        'neutron dose': [5.9620e+19, 8.0662e+19, 1.7761e+20, 3.4291e+20, 7.2504e+20, 1.5555e+21, 6.1675e+21]
+        values: [435.6330, 501.6940, 627.3829, 705.4964, 794.9245, 887.1796, 1050.5222]
+      573:
+        'neutron dose': [6.2783e+19, 1.5186e+20, 3.4778e+20, 7.0900e+20, 6.1411e+21]
+        values: [299.1465, 407.7634, 500.0461, 580.2556, 832.9849]
+      673:
+        'neutron dose': [3.4583e+20, 1.4582e+21, 6.0648e+21]
+        values: [399.8204, 555.2681, 750.5207]
+      773:
+        'neutron dose': [6.0661e+20, 1.4452e+21, 6.0508e+21]
+        values: [394.0424, 469.9701, 633.9470]
+      873:
+        'neutron dose': [1.5006e+20, 3.4828e+20, 7.0678e+20, 1.4608e+21, 6.1065e+21]
+        values: [168.9275, 206.4708, 237.6431, 277.3307, 362.4150]
+      923:
+        'neutron dose': [1.8562e+20, 4.4817e+20, 1.4465e+21]
+        values: [105.6314, 121.1314, 145.1191]
+      973:
+        'neutron dose': [1.8626e+20, 4.4970e+20, 1.4566e+21]
+        values: [94.9717, 110.4717, 130.9016]
+      1023:
+        'neutron dose': [1.5037e+20, 1.8626e+20, 4.5127e+20, 6.1241e+21]
+        values: [91.4484, 94.9717, 103.3629, 141.3475]
+  annealed_elongation_thermal: &annealed_elongation_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: override
+    representation: table
+    reference: 'IrvinBement1967'
+    temperature: [297.8366, 313.0000, 333.0000, 353.0000, 373.0000, 393.0000, 413.0000,
+      433.0000, 453.0000, 473.0000, 493.0000, 513.0000, 533.0000, 553.0000, 573.0000,
+      593.0000, 613.0000, 633.0000, 652.9962, 673.0000, 693.0000, 713.0000, 733.0000,
+      753.0000, 773.0000, 793.0000, 813.0000, 833.0000, 853.0000, 873.0000, 893.0000,
+      913.0000, 933.0000, 953.0000, 973.0000, 993.0000, 1013.0000, 1033.0000, 1053.0000,
+      1073.0000, 1093.0000, 1113.0000]
+    values: [78.0281, 75.5715, 72.3168, 69.0214, 65.7958, 62.6139, 59.5572, 56.6511,
+      53.8225, 51.2088, 48.6861, 46.3358, 44.2753, 42.2466, 40.3881, 38.8437, 37.6954,
+      36.8409, 36.2843, 35.9807, 35.9165, 36.1732, 36.5441, 36.6209, 36.2751, 35.2350,
+      33.7751, 31.8189, 29.4830, 26.8082, 24.1030, 21.4544, 19.2823, 17.7301, 16.5173,
+      15.5712, 14.8492, 14.2537, 13.7563, 13.4673, 13.2376, 13.1665]
+annealed_elongation_radiation: &annealed_elongation_radiation
+    state_vars: ['neutron dose', 'temperature']
+    state_vars_units: {'neutron dose': 'cm^-2', 'temperature': 'kelvin'}
+    value_type: override
+    representation: table
+    reference: 'IrvinBement1967'
+    'neutron dose':
+      1.0e+20:
+        temperature: [300., 330.0000, 350.0000, 370.0000, 390.0000, 410.0000, 430.0000,
+          450.0000, 470.0000, 490.0000, 510.0000, 530.0000, 550.0000, 570.0000, 590.0000,
+          609.9962, 630.0000, 650.0000, 670.0000, 690.0000, 710.0000, 730.0000, 750.0000,
+          770.0000, 790.0000, 810.0000, 830.0000, 850.0000, 870.0000, 890.0000, 910.0000,
+          930.0000, 950.0000, 970.0000, 995.0541]
+        values: [50.1059, 45.8605, 43.4283, 41.2239, 38.8512, 36.6837, 34.7105, 32.6982,
+          30.8461, 29.2390, 27.6026, 26.2531, 24.9511, 23.8846, 23.0039, 22.3929, 22.1201,
+          22.1423, 22.6295, 22.8502, 22.9638, 22.8792, 22.7496, 22.4278, 22.0487, 21.6050,
+          21.0399, 20.3407, 19.3898, 18.4874, 17.3565, 16.0706, 14.5662, 13.1795, 10.7602]
+      5.0e+20:
+        temperature: [300., 333.0000, 353.0000, 373.0000, 393.0000, 413.0000, 433.0000,
+          453.0000, 473.0000, 493.0000, 513.0000, 533.0000, 553.0000, 573.0000, 593.0000,
+          613.0057, 633.0000, 653.0000, 673.0000, 693.0000, 713.0000, 733.0000, 753.0000,
+          773.0000, 793.0000, 813.0000, 833.0000, 853.0000, 873.0000, 893.0000, 913.0000,
+          932.9962, 952.9952, 973.0057, 993.0000]
+        values: [22.5000, 20.1701, 19.0376, 17.8333, 16.7596, 15.7419, 14.8139, 13.9302,
+          13.0666, 12.3268, 11.6712, 11.2480, 10.9402, 10.7944, 10.8157, 10.9443, 11.2004,
+          11.6754, 12.0424, 12.4171, 13.0093, 13.5899, 14.1659, 14.5951, 14.9387, 15.2312,
+          15.3349, 15.3130, 15.1894, 15.1058, 14.8462, 14.4236, 13.9003, 13.1774, 12.3975]
+      1.0e+21:
+        temperature: [300., 333.0000, 353.0000, 373.0000, 393.0000, 413.0000, 433.0000,
+          453.0000, 473.0000, 493.0000, 513.0000, 533.0000, 553.0000, 573.0000, 592.9971,
+          612.9981, 633.0000, 653.0000, 673.0000, 693.0000, 713.0000, 733.0000, 753.0000,
+          773.0000, 793.0000, 813.0000, 833.0000, 853.0000, 873.0000, 893.0000, 913.0000,
+          933.0000, 953.0000, 973.0000, 993.0000]
+        values: [9.3786, 8.6398, 8.1615, 7.7021, 7.2881, 6.8332, 6.4798, 6.0352, 5.6003,
+          5.2077, 4.8073, 4.4248, 4.1336, 3.7606, 3.4384, 3.0809, 2.8016, 2.5294, 2.4596,
+          2.6783, 3.3523, 4.3400, 5.6528, 6.9028, 8.1809, 9.4566, 10.5772, 11.4605, 12.2655,
+          12.8822, 13.2173, 13.0163, 12.1452, 10.6994, 8.6548]
+
+forms:
+  'sheet and strip':
+    conditions:
+      annealed:
+        specification: 'AMS 5513'
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 503.    # 73 ksi, in the weakest (L) direction
+            basis: S
+            reference: mmpds01
+            variations_with_state:
+              thermal:
+                <<: *annealed_strength_tensile_ultimate_thermal
+          strength_tensile_yield:
+            units: MPa
+            default_value: 179.    # 26 ksi, in the weakest (L) direction
+            basis: S
+            reference: mmpds01
+            variations_with_state:
+              thermal:
+                <<: *annealed_strength_tensile_yield_thermal
+              radiation:
+                <<: *annealed_strength_tensile_yield_radiation
+          elongation:    # Uniform elongation (not total elongation)
+            units: percent
+            default_value: 78.
+            reference: IrvinBement1967
+            variations_with_state:
+              thermal:
+                <<: *annealed_elongation_thermal
+              radiation:
+                <<: *annealed_elongation_radiation
