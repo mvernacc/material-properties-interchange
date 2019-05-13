@@ -3,6 +3,7 @@
 import copy
 import numpy as np
 import scipy.interpolate
+import asteval
 
 def _create_interp_arrays_from_yaml_table_2d(yaml_dict, state_vars, state_vars_interp_scales):
     """Create 2d interpolation arrays for `griddata` from a YAML dict.
@@ -112,6 +113,24 @@ class VariationWithState:
     def get_state_domain(self):
         """Get the domain over which the variation with state model is valid."""
         pass
+
+    def is_state_in_domain(self, state):
+        """Check that the state is within the valid domain.
+        Returns:
+            bool: True if `state` is in the valid domain for the model.
+        """
+        # Check that all the state variables have been provided in `state`.
+        for var_name in self.state_vars:
+            if var_name not in state.keys():
+                raise ValueError('{:s} not provided for query'.format(var_name))
+
+        state_domain = self.get_state_domain()    #pylint: disable=assignment-from-no-return
+        for state_name in state:
+            smin = state_domain[state_name][0]
+            smax = state_domain[state_name][1]
+            if state[state_name] < smin or state[state_name] > smax:
+                return False
+        return True
 
     def __str__(self):
         state_var_str = ', '.join(self.state_vars)
@@ -237,6 +256,83 @@ class VariationWithStateTable(VariationWithState):
         return result
 
 
+class VariationWithStateEquation(VariationWithState):
+    """A material property's variation with state, represented as an equation.
+
+    Arguments:
+        state_vars (list of string): Names of the state variables.
+        state_vars_units (dict of string): Units of measure for each state variable.
+        value_type (string): Is the stored value a multiplier on the default value,
+            or does it override the default value?
+        reference (string): Bibtex tag for the source of the data.
+        expression (string): A mathematical expression for the value of the property
+            as a function of the state variables. This should be a string containing
+            python math operators, the state variable names, and `math` functions, e.g.
+                `'1.23 * temperature + 4.5 * temperature**2'`
+                `'5.6 * exp(7.8 / temperature)'`
+            When evaluated, this expression gives the value of the property.
+        state_domain (dict): each key is the name of a state variable.
+            Values are tuples `(smin, smax)` where `smin` is the minimum bound
+            of the valid domain in that state variable and `smax` is the maximum bound.
+    """
+    def __init__(self, state_vars, state_vars_units, value_type, reference,
+                 expression, state_domain):
+        VariationWithState.__init__(self, 'equation', state_vars, state_vars_units, value_type, reference)
+        # Create an asteval Procedure which evaluates the `expression`
+        aeval = asteval.Interpreter()
+        args_str = ', '.join(state_vars)
+        func_str = 'def f({:s}):\n    return {:s}'.format(args_str, expression)
+        aeval(func_str)
+        self.procedure = aeval('f')
+
+        # Check that `state_domain` provides a valid domain for each state.
+        for name in state_vars:
+            if name not in state_domain:
+                raise ValueError('The provided `state_domain` dict does not'
+                    + ' have a domain for state {:s}'.format(name))
+        self.state_domain = state_domain
+
+
+    def query_value(self, state):
+        """Query the value of the property at a particular state.
+
+        Arguments:
+            state (dict): The state at which to query the values. It must have
+                a key for each variable name in `self.state_vars`. `state[s1]`
+                specifies the query point for state variable `s1`. The query point
+                for each state may be an array or a scalar. e.g.
+                    `state={'s1': 0, 's2': 1}`
+                    `state={'s1': 0, 's2': np.array([1, 2, 3])}`
+                    and
+                    `state={'s1': np.array([5, 6, 7]), 's2': np.array([1, 2, 3])}`
+                are all valid.
+
+        Returns:
+            scalar or array: value(s) of the property at the provided state(s).
+        """
+        # Check that all the state variables have been provided in `state`.
+        for var_name in self.state_vars:
+            if var_name not in state.keys():
+                raise ValueError('{:s} not provided for query'.format(var_name))
+
+        if not self.is_state_in_domain(state):
+            return np.nan
+
+        result = self.procedure(**state)
+        return result
+
+    def get_state_domain(self):
+        """Get the domain over which the property's variation with state model is valid.
+
+        Returns:
+            dict: each key is the name of a state variable.
+            Values are tuples `(smin, smax)` where `smin` is the minimum bound
+            of the valid domain in that state variable and `smax` is the maximum bound.
+            The units of `smin` and `smax` are given by `state_vars_units[key]`.
+        """
+        return self.state_domain
+
+
 def build_from_yaml(yaml_dict):
     """Construct a variation with state object from a YAML-derived dictionary."""
     state_vars = yaml_dict['state_vars']
@@ -252,5 +348,13 @@ def build_from_yaml(yaml_dict):
         return VariationWithStateTable(
             state_vars, state_vars_units, value_type, reference,
             interp_points, interp_values, state_vars_interp_scales)
+    elif yaml_dict['representation'] == 'equation':
+        expression = yaml_dict['expression']
+        state_domain = yaml_dict['state_domain']
+        return VariationWithStateEquation(
+            state_vars, state_vars_units,
+            value_type, reference,
+            expression, state_domain)
     else:
-        raise NotImplementedError('Representations other than table are not yet supported.')
+        raise NotImplementedError('Representations other than table or equation are'
+            +' not yet supported.')

@@ -106,6 +106,28 @@ class TestBuildFromYaml(unittest.TestCase):
         self.assertEqual(state_model.state_vars[0], 'exposure time')
         self.assertEqual(state_model.state_vars[1], 'temperature')
 
+    def test_build_eqn_1d(self):
+        """Test build_from_yaml with a single varaible equation."""
+        # Setup
+        yaml_dict = {
+            'state_vars': ['temperature'],
+            'state_vars_units': {'temperature': 'kelvin'},
+            'value_type': 'multiplier',
+            'representation': 'equation',
+            'reference': 'reference',
+            'expression': '1 + temperature**2',
+            'state_domain': {'temperature': (0, 1000)},
+            }
+
+        # Action
+        state_model = vstate.build_from_yaml(yaml_dict)
+
+        # Verification
+        self.assertEqual('reference', state_model.reference)
+        self.assertEqual('equation', state_model.representation)
+        self.assertEqual(len(state_model.state_vars), 1)
+        self.assertEqual(state_model.state_vars[0], 'temperature')
+
 
 class TestVariationWithStateTable(unittest.TestCase):
     """Unit tests for VariationWithStateTable."""
@@ -289,6 +311,62 @@ class TestVariationWithStateTable(unittest.TestCase):
             + ' represented as a table. [Data from reference]')
         self.assertEqual(string, desired_string)
 
+
+class TestVariationWithStateEquation(unittest.TestCase):
+    """Unit tests for VariationWithStateEquation."""
+
+    def test_query_1d(self):
+        """Test querying an expression of one variable."""
+        # Setup
+        state_model = vstate.VariationWithStateEquation(
+            ['temperature'], {'temperature': 'kelvin'}, 'override', 'reference',
+            '1 + temperature**2', {'temperature': (0, 1000)})
+
+        # Action and verification
+        result = state_model.query_value({'temperature': 1})
+        self.assertEqual(result, 2)
+        result = state_model.query_value({'temperature': 2.})
+        self.assertEqual(result, 5)
+
+    def test_is_state_in_domain_1d(self):
+        """Test checking if a state is in the valid domain."""
+        # Setup
+        state_model = vstate.VariationWithStateEquation(
+            ['temperature'], {'temperature': 'kelvin'}, 'override', 'reference',
+            '1 + temperature**2', {'temperature': (0, 1000)})
+
+        # Action and verification
+        self.assertTrue(state_model.is_state_in_domain({'temperature': 1}))
+        self.assertFalse(state_model.is_state_in_domain({'temperature': -1}))
+        self.assertFalse(state_model.is_state_in_domain({'temperature': 1000.1}))
+
+    def test_query_2d(self):
+        """Test querying an expression of two variables."""
+        # Setup
+        state_model = vstate.VariationWithStateEquation(
+            ['temperature', 'pressure'], {'temperature': 'kelvin', 'pressure': 'pascal'},
+            'override', 'reference',
+            '1 + temperature**2 + pressure', {'temperature': (0, 1000), 'pressure': (0, 1e6)})
+
+        # Action and verification
+        result = state_model.query_value({'temperature': 1, 'pressure': 1})
+        self.assertEqual(result, 3)
+        result = state_model.query_value({'temperature': 2, 'pressure': 2})
+        self.assertEqual(result, 7)
+
+    def test_is_state_in_domain_2d(self):
+        """Test checking if a state is in the valid domain, with two state variables."""
+        # Setup
+        state_model = vstate.VariationWithStateEquation(
+            ['temperature', 'pressure'], {'temperature': 'kelvin', 'pressure': 'pascal'},
+            'override', 'reference',
+            '1 + temperature**2 + pressure', {'temperature': (0, 1000), 'pressure': (0, 1e6)})
+
+        # Action and verification
+        self.assertTrue(state_model.is_state_in_domain({'temperature': 1, 'pressure': 1}))
+        self.assertFalse(state_model.is_state_in_domain({'temperature': -1, 'pressure': 1}))
+        self.assertFalse(state_model.is_state_in_domain({'temperature': 1000.1, 'pressure': 1}))
+        self.assertFalse(state_model.is_state_in_domain({'temperature': 10, 'pressure': -1}))
 
 if __name__ == '__main__':
     unittest.main()
