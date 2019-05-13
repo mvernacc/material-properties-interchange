@@ -1,0 +1,93 @@
+name: copper
+category: metal
+subcategory: 'copper and copper alloys'
+
+references:    # In bibtex format
+  - |
+    @article{matula1979,
+      author = {R A Matula},
+      title = {Electrical Resistivity of Copper, Gold, Palladium, and Silver},
+      journal = {J. Phys. Chem. Ref. Data},
+      year = {1979},
+      volume = {8},
+      number = {4},
+      url = {https://srd.nist.gov/JPCRD/jpcrd155.pdf}
+    }
+  - |
+    @online{nist_webook_copper,
+      author = {{National Institute of Standards and Technology}},
+      title = {copper},
+      year = {2018},
+      url = {https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440508}
+    }
+
+elemental_composition:    # percent by mass, [min, max]
+  Cu: [99.999, 100.]
+
+common_properties: &common_properties
+  melting_point:
+    units: kelvin
+    default_value: 1357.95
+    reference: nist_webook_copper
+  heat_capacity:
+    units: 'joule kilogram**-1 kelvin**-1'
+    default_value: 385.1
+    reference: nist_webook_copper
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': 'kelvin'}
+        value_type: override    # multiplier or override
+        representation: equation
+        reference: nist_webook_copper
+        expression: 't = temperature / 1000; value = (1/ 0.063546) * (17.72891 + 28.09870 * t + -31.25289 * t**2 + 13.97243 * t**3 + 0.068611 * t**(-2))'
+        state_domain:
+          temperature: [298, 1358]
+  electrical_resistivity:
+    units: 'ohm meter'
+    default_value: 1.678e-8
+    reference: matula1979
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': 'kelvin'}
+        state_vars_interp_scales: ['log']
+        value_type: override    # multiplier or override
+        representation: 'table'
+        reference: matula1979
+        temperature: [1, 4, 7, 10, 15,
+          20, 25, 30, 35, 40,
+          45, 50, 55, 60, 70,
+          80, 90, 100, 125, 150,
+          175, 200, 225, 250, 273.15,
+          293, 300, 350, 400, 500,
+          600, 700, 800, 900, 1000,
+          1100, 1200, 1300, 1357.6]
+        values: [0.002e-8, 0.002e-8, 0.002e-8, 0.00202e-8, 0.00218e-8,
+          0.00280e-8, 0.00449e-8, 0.00828e-8, 0.0147e-8, 0.0239e-8,
+          0.0358e-8, 0.0518e-8, 0.0727e-8, 0.0971e-8, 0.154e-8,
+          0.215e-8, 0.281e-8, 0.348e-8, 0.522e-8, 0.699e-8,
+          0.874e-8, 1.046e-8, 1.217e-8, 1.387e-8, 1.543e-8,
+          1.678e-8, 1.725e-8, 2.063e-8, 2.402e-8, 3.090e-8,
+          3.792e-8, 4.514e-8, 5.262e-8, 6.041e-8, 6.858e-8,
+          7.717e-8, 8.626e-8, 9.592e-8, 10.171e-8]
+forms:
+  # This map gives different forms in which the material can produced,
+  # e.g. 'extruded', 'forged', etc. We use form in the same sense as MMPDS.
+  #
+  # Within each form, the `conditions` map,  gives different conditions,
+  # a.k.a heat treatments or tempers, that can be applied to the material.
+  # MMPDS uses the terms 'condition' and 'temper' to refer to this concept.
+  #
+  # The form and condition can effect some properties of the material, so there is a
+  # separate `properties` map within each form and condition.
+  'wire':
+    conditions:
+      'annealed':
+        properties:
+          # The `<<: *x` is YAML magic which copies all the keys of `x`
+          # into the current map.
+          # See https://learnxinyminutes.com/docs/yaml/
+          # This allows us to copy common properties into each form & condition
+          # that share those properties.
+          <<: *common_properties
