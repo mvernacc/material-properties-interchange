@@ -126,9 +126,10 @@ class VariationWithState:
 
         state_domain = self.get_state_domain()    #pylint: disable=assignment-from-no-return
         for state_name in state:
+            value = state[state_name]
             smin = state_domain[state_name][0]
             smax = state_domain[state_name][1]
-            if state[state_name] < smin or state[state_name] > smax:
+            if np.any(value < smin) or np.any(value > smax):
                 return False
         return True
 
@@ -268,8 +269,8 @@ class VariationWithStateEquation(VariationWithState):
         expression (string): A mathematical expression for the value of the property
             as a function of the state variables. This should be a string containing
             python math operators, the state variable names, and `math` functions, e.g.
-                `'1.23 * temperature + 4.5 * temperature**2'`
-                `'5.6 * exp(7.8 / temperature)'`
+                `'value = 1.23 * temperature + 4.5 * temperature**2'`
+                `'value = 5.6 * exp(7.8 / temperature)'`
             When evaluated, this expression gives the value of the property.
         state_domain (dict): each key is the name of a state variable.
             Values are tuples `(smin, smax)` where `smin` is the minimum bound
@@ -279,9 +280,11 @@ class VariationWithStateEquation(VariationWithState):
                  expression, state_domain):
         VariationWithState.__init__(self, 'equation', state_vars, state_vars_units, value_type, reference)
         # Create an asteval Procedure which evaluates the `expression`
+        if 'value' not in expression:
+            raise ValueError('`expression` must set value equal to a function of the state varaibles.')
         aeval = asteval.Interpreter()
         args_str = ', '.join(state_vars)
-        func_str = 'def f({:s}):\n    return {:s}'.format(args_str, expression)
+        func_str = 'def f({:s}):\n    {:s}\n    return value'.format(args_str, expression)
         aeval(func_str)
         self.procedure = aeval('f')
 

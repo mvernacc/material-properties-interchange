@@ -320,7 +320,7 @@ class TestVariationWithStateEquation(unittest.TestCase):
         # Setup
         state_model = vstate.VariationWithStateEquation(
             ['temperature'], {'temperature': 'kelvin'}, 'override', 'reference',
-            '1 + temperature**2', {'temperature': (0, 1000)})
+            'value = 1 + temperature**2', {'temperature': (0, 1000)})
 
         # Action and verification
         result = state_model.query_value({'temperature': 1})
@@ -333,7 +333,7 @@ class TestVariationWithStateEquation(unittest.TestCase):
         # Setup
         state_model = vstate.VariationWithStateEquation(
             ['temperature'], {'temperature': 'kelvin'}, 'override', 'reference',
-            '1 + temperature**2', {'temperature': (0, 1000)})
+            'value = 1 + temperature**2', {'temperature': (0, 1000)})
 
         # Action and verification
         self.assertTrue(state_model.is_state_in_domain({'temperature': 1}))
@@ -346,7 +346,7 @@ class TestVariationWithStateEquation(unittest.TestCase):
         state_model = vstate.VariationWithStateEquation(
             ['temperature', 'pressure'], {'temperature': 'kelvin', 'pressure': 'pascal'},
             'override', 'reference',
-            '1 + temperature**2 + pressure', {'temperature': (0, 1000), 'pressure': (0, 1e6)})
+            'value = 1 + temperature**2 + pressure', {'temperature': (0, 1000), 'pressure': (0, 1e6)})
 
         # Action and verification
         result = state_model.query_value({'temperature': 1, 'pressure': 1})
@@ -360,7 +360,7 @@ class TestVariationWithStateEquation(unittest.TestCase):
         state_model = vstate.VariationWithStateEquation(
             ['temperature', 'pressure'], {'temperature': 'kelvin', 'pressure': 'pascal'},
             'override', 'reference',
-            '1 + temperature**2 + pressure', {'temperature': (0, 1000), 'pressure': (0, 1e6)})
+            'value = 1 + temperature**2 + pressure', {'temperature': (0, 1000), 'pressure': (0, 1e6)})
 
         # Action and verification
         self.assertTrue(state_model.is_state_in_domain({'temperature': 1, 'pressure': 1}))

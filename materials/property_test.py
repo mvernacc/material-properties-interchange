@@ -171,7 +171,7 @@ class TestStateDependentProperty(unittest.TestCase):
                     'value_type': 'multiplier',
                     'representation': 'equation',
                     'reference': 'reference',
-                    'expression': 'temperature**2',
+                    'expression': 'value = temperature**2',
                     'state_domain': {'temperature': (0, 1000)},
                 }
             }
