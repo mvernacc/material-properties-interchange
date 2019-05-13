@@ -115,7 +115,7 @@ class TestBuildFromYaml(unittest.TestCase):
             'value_type': 'multiplier',
             'representation': 'equation',
             'reference': 'reference',
-            'expression': '1 + temperature**2',
+            'expression': 'value = 1 + temperature**2',
             'state_domain': {'temperature': (0, 1000)},
             }
 
@@ -368,5 +368,16 @@ class TestVariationWithStateEquation(unittest.TestCase):
         self.assertFalse(state_model.is_state_in_domain({'temperature': 1000.1, 'pressure': 1}))
         self.assertFalse(state_model.is_state_in_domain({'temperature': 10, 'pressure': -1}))
 
+    def test_import_os(self):
+        """Security: Make sure one cannot import os in the expression."""
+        # Setup
+        state_model = vstate.VariationWithStateEquation(
+            ['temperature'], {'temperature': 'kelvin'}, 'override', 'reference',
+            'value = 1; import os', {'temperature': (0, 1000)})
+        # Action and verification
+        with self.assertRaises(NotImplementedError):
+            state_model.query_value({'temperature': 1})
+
+ 
 if __name__ == '__main__':
     unittest.main()
