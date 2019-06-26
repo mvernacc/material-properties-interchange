@@ -20,17 +20,17 @@ class TestCreatInterpArrays(unittest.TestCase):
             'exposure time': {
                 0.0: {
                     'temperature': np.arange(4),
-                    'values': np.arange(4)**2
+                    'values': np.arange(4) ** 2
                 },
                 0.1: {
                     'temperature': np.arange(4),
-                    'values': (np.arange(4) + 0.1)**2
+                    'values': (np.arange(4) + 0.1) ** 2
                 },
             }
         }
 
         # Action
-        #pylint: disable=protected-access
+        # pylint: disable=protected-access
         interp_points, interp_values = vstate._create_interp_arrays_from_yaml_table(
             yaml_dict, yaml_dict['state_vars'], ['linear', 'linear'])
 
@@ -47,9 +47,9 @@ class TestCreatInterpArrays(unittest.TestCase):
         self.assertEqual(len(interp_values.shape), 1)
         self.assertEqual(interp_values.shape[0], 4 * 2)
         self.assertEqual(interp_values[0], 0)
-        self.assertEqual(interp_values[3], 3**2)
-        self.assertEqual(interp_values[4], 0.1**2)
-        self.assertEqual(interp_values[7], (3.1)**2)
+        self.assertEqual(interp_values[3], 3 ** 2)
+        self.assertEqual(interp_values[4], 0.1 ** 2)
+        self.assertEqual(interp_values[7], (3.1) ** 2)
 
 
 class TestBuildFromYaml(unittest.TestCase):
@@ -65,8 +65,8 @@ class TestBuildFromYaml(unittest.TestCase):
             'representation': 'table',
             'reference': 'mmpds',
             'temperature': np.arange(4),
-            'values': np.arange(4)**2,
-            }
+            'values': np.arange(4) ** 2,
+        }
 
         # Action
         state_model = vstate.build_from_yaml(yaml_dict)
@@ -88,11 +88,11 @@ class TestBuildFromYaml(unittest.TestCase):
             'exposure time': {
                 0.0: {
                     'temperature': np.arange(4),
-                    'values': np.arange(4)**2
+                    'values': np.arange(4) ** 2
                 },
                 0.1: {
                     'temperature': np.arange(4),
-                    'values': (np.arange(4) + 0.1)**2
+                    'values': (np.arange(4) + 0.1) ** 2
                 },
             }
         }
@@ -117,7 +117,7 @@ class TestBuildFromYaml(unittest.TestCase):
             'reference': 'reference',
             'expression': 'value = 1 + temperature**2',
             'state_domain': {'temperature': (0, 1000)},
-            }
+        }
 
         # Action
         state_model = vstate.build_from_yaml(yaml_dict)
@@ -137,22 +137,22 @@ class TestVariationWithStateTable(unittest.TestCase):
         # Setup
         state_model = vstate.VariationWithStateTable(
             ['temperature'], {'temperature': 'kelvin'}, 'multiplier', 'reference',
-            np.arange(4), np.arange(4)**2,
+            np.arange(4), np.arange(4) ** 2,
             ['linear'])
 
         # Action and verification
         # Check queries at given points
-        self.assertEqual(state_model.query_value({'temperature': 1}), 1**2)
-        self.assertEqual(state_model.query_value({'temperature': 2}), 2**2)
+        self.assertEqual(state_model.query_value({'temperature': 1}), 1 ** 2)
+        self.assertEqual(state_model.query_value({'temperature': 2}), 2 ** 2)
         # Check interpolation between given points
         self.assertAlmostEqual(state_model.query_value({'temperature': 2.5}, method='linear'), 6.5)
         # Check query of multiple points
         result = state_model.query_value({'temperature': [1, 2]})
-        self.assertEqual(result[0], 1**2)
-        self.assertEqual(result[1], 2**2)
+        self.assertEqual(result[0], 1 ** 2)
+        self.assertEqual(result[1], 2 ** 2)
         # Check bad query
         with self.assertRaises(ValueError):
-            state_model.query_value({'fish': 1.})    # fish is not a state variable.
+            state_model.query_value({'fish': 1.})  # fish is not a state variable.
 
     def test_query_2d(self):
         """Test queries on a 2-d lookup table."""
@@ -161,17 +161,17 @@ class TestVariationWithStateTable(unittest.TestCase):
             'exposure time': {
                 0.0: {
                     'temperature': np.arange(4),
-                    'values': np.arange(4)**2
+                    'values': np.arange(4) ** 2
                 },
                 0.1: {
                     'temperature': np.arange(4),
-                    'values': (np.arange(4) + 0.5)**2
+                    'values': (np.arange(4) + 0.5) ** 2
                 },
             }
         }
         state_vars = ['exposure time', 'temperature']
         scales = ['linear', 'linear']
-        #pylint: disable=protected-access
+        # pylint: disable=protected-access
         interp_points, interp_values = vstate._create_interp_arrays_from_yaml_table(
             yaml_dict, state_vars, scales)
 
@@ -183,14 +183,14 @@ class TestVariationWithStateTable(unittest.TestCase):
         # Action and verification
         # Check queries at given points
         result = state_model.query_value({'exposure time': 0, 'temperature': 1})
-        self.assertEqual(result, 1**2)
+        self.assertEqual(result, 1 ** 2)
         result = state_model.query_value({'exposure time': 0.1, 'temperature': 3})
-        self.assertEqual(result, 3.5**2)
+        self.assertEqual(result, 3.5 ** 2)
         # Check interpolation between given points
         result = state_model.query_value({'exposure time': 0, 'temperature': 2.5}, method='linear')
         self.assertAlmostEqual(result, 6.5)
         result = state_model.query_value({'exposure time': 0.05, 'temperature': 2}, method='linear')
-        self.assertAlmostEqual(result, (2**2 + 2.5**2)/2)
+        self.assertAlmostEqual(result, (2 ** 2 + 2.5 ** 2) / 2)
 
         # Check that a scalar query returns a scalar
         result = state_model.query_value({'exposure time': 0, 'temperature': 1})
@@ -199,16 +199,16 @@ class TestVariationWithStateTable(unittest.TestCase):
         # Check query of multiple points, with one scalar state
         result = state_model.query_value({'exposure time': 0, 'temperature': [1, 2]})
         self.assertTrue(np.ndim(result) > 0)
-        self.assertEqual(result[0], 1**2)
-        self.assertAlmostEqual(result[1], 2**2)
+        self.assertEqual(result[0], 1 ** 2)
+        self.assertAlmostEqual(result[1], 2 ** 2)
         result = state_model.query_value({'exposure time': [0, 0.05], 'temperature': 1})
         self.assertTrue(np.ndim(result) > 0)
         self.assertEqual(len(result), 2)
         # Check query of multiple points
         result = state_model.query_value({'exposure time': [0, 0.05], 'temperature': [1, 2]})
         self.assertTrue(np.ndim(result) > 0)
-        self.assertEqual(result[0], 1**2)
-        self.assertAlmostEqual(result[1], (2**2 + 2.5**2)/2)
+        self.assertEqual(result[0], 1 ** 2)
+        self.assertAlmostEqual(result[1], (2 ** 2 + 2.5 ** 2) / 2)
 
         # Check bad query
         with self.assertRaises(ValueError):
@@ -226,7 +226,7 @@ class TestVariationWithStateTable(unittest.TestCase):
         # Setup
         state_model = vstate.VariationWithStateTable(
             ['temperature'], {'temperature': 'kelvin'}, 'multiplier', 'reference',
-            np.arange(4), np.arange(4)**2,
+            np.arange(4), np.arange(4) ** 2,
             ['linear'])
 
         # Action
@@ -238,7 +238,6 @@ class TestVariationWithStateTable(unittest.TestCase):
         self.assertEqual(domain['temperature'][0], 0)
         self.assertEqual(domain['temperature'][1], 3)
 
-
     def test_domain_2d(self):
         """Test get_state_domain on a 2-d lookup table."""
         # Setup
@@ -246,17 +245,17 @@ class TestVariationWithStateTable(unittest.TestCase):
             'exposure time': {
                 0.0: {
                     'temperature': np.arange(4),
-                    'values': np.arange(4)**2
+                    'values': np.arange(4) ** 2
                 },
                 0.1: {
                     'temperature': np.arange(4),
-                    'values': (np.arange(4) + 0.5)**2
+                    'values': (np.arange(4) + 0.5) ** 2
                 },
             }
         }
         state_vars = ['exposure time', 'temperature']
         scales = ['linear', 'linear']
-        #pylint: disable=protected-access
+        # pylint: disable=protected-access
         interp_points, interp_values = vstate._create_interp_arrays_from_yaml_table(
             yaml_dict, state_vars, scales)
 
@@ -284,17 +283,17 @@ class TestVariationWithStateTable(unittest.TestCase):
             'exposure time': {
                 0.0: {
                     'temperature': np.arange(4),
-                    'values': np.arange(4)**2
+                    'values': np.arange(4) ** 2
                 },
                 0.1: {
                     'temperature': np.arange(4),
-                    'values': (np.arange(4) + 0.5)**2
+                    'values': (np.arange(4) + 0.5) ** 2
                 },
             }
         }
         state_vars = ['exposure time', 'temperature']
         scales = ['linear', 'linear']
-        #pylint: disable=protected-access
+        # pylint: disable=protected-access
         interp_points, interp_values = vstate._create_interp_arrays_from_yaml_table(
             yaml_dict, state_vars, scales)
 
@@ -308,7 +307,7 @@ class TestVariationWithStateTable(unittest.TestCase):
 
         # Verification
         desired_string = ('Variation with exposure time, temperature over 0 to 0.1 hour, 0 to 3 kelvin,'
-            + ' represented as a table. [Data from reference]')
+                          + ' represented as a table. [Data from reference]')
         self.assertEqual(string, desired_string)
 
 
@@ -378,6 +377,6 @@ class TestVariationWithStateEquation(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             state_model.query_value({'temperature': 1})
 
- 
+
 if __name__ == '__main__':
     unittest.main()

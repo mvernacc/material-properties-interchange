@@ -1,0 +1,10 @@
+matplotlib
+jupyter
+ipykernel
+asteval
+sphinx
+sphinx-rtd-theme
+sphinxcontrib-napoleon
+scipy
+numpy
+pyyaml

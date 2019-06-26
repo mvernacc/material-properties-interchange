@@ -3,7 +3,7 @@ import os.path
 import unittest
 import numpy as np
 from materials import Material, load_from_yaml, get_database_dir
-from material import build_properties
+from materials.material import build_properties
 from materials.property import Property
 
 
@@ -18,8 +18,8 @@ class TestBuildProperties(unittest.TestCase):
                 'default_value': 1000.,
                 'units': 'kg m^-3',
                 'reference': 'mmpds'
-                }
             }
+        }
 
         # Action
         properties = build_properties(yaml_dict)
@@ -46,7 +46,7 @@ class TestBuildProperties(unittest.TestCase):
                         'representation': 'table',
                         'reference': 'mmpds',
                         'temperature': np.arange(4),
-                        'values': np.arange(4)**2,
+                        'values': np.arange(4) ** 2,
                     }
                 }
             }
@@ -72,8 +72,8 @@ class TestMaterial(unittest.TestCase):
                 'default_value': 1000.,
                 'units': 'kg m^-3',
                 'reference': 'mmpds'
-                }
             }
+        }
 
         # Action
         matl = Material('name', properties_dict=yaml_dict)
@@ -92,8 +92,8 @@ class TestMaterial(unittest.TestCase):
                 'default_value': 1000.,
                 'units': 'kg m^-3',
                 'reference': 'mmpds'
-                }
             }
+        }
         matl = Material('name', properties_dict=yaml_dict)
 
         # Action
@@ -119,7 +119,7 @@ class TestLoadFromYaml(unittest.TestCase):
         self.assertEqual(al6061.properties['youngs_modulus'].units, 'GPa')
         result = al6061.properties['youngs_modulus'].query_value({'temperature': 294})
         self.assertAlmostEqual(result, 68.3, delta=0.5)
-        print('\n' + str(al6061) + '\n')        
+        print('\n' + str(al6061) + '\n')
 
 
 if __name__ == '__main__':

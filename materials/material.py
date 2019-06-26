@@ -12,7 +12,7 @@ def build_properties(properties_dict_yaml):
     Returns:
         properties_dict_py (dict): keys are property name strings, values are Property objects.
     """
-    properties_dict_py = {}    # Dictionary of properties as python objects
+    properties_dict_py = {}  # Dictionary of properties as python objects
     for property_name, property_dict in properties_dict_yaml.items():
         if 'variations_with_state' in property_dict:
             prop = StateDependentProperty(property_name, property_dict)
@@ -25,6 +25,7 @@ def build_properties(properties_dict_yaml):
 
 class Material:
     """An engineering material, in a particular form and condition."""
+
     def __init__(self, name, form=None, condition=None, category=None, subcategory=None,
                  references=None, properties_dict=None, elemental_composition=None):
         """Create a Material.
@@ -94,7 +95,7 @@ class Material:
             raise KeyError(
                 'This Material does not have a {:s} property'.format(key)
                 + '\nThe valid keys are {}'.format(self.properties.keys())
-                )
+            )
         return self.properties[key]
 
     def elements_table_str(self):
@@ -120,7 +121,7 @@ class Material:
 
     def __str__(self):
         string = self.name
-        string += '\n' + '-'*len(self.name) + '\n'
+        string += '\n' + '-' * len(self.name) + '\n'
         string += '{:s}, {:s}\n'.format(self.category, self.subcategory)
         string += '\n' + self.elements_table_str() + '\n\n'
         string += 'Properties for the "{:s}" form, "{:s}" condition:\n'.format(self.form, self.condition)
