@@ -21,6 +21,7 @@ def plot_property_vs_state(prop, state_model=None, state_name=None, state_range=
 
     Returns:
         matplotlib.axes.Axes: The axes on which the plot was drawn.
+
     """
     if state_model is None:
         state_model = prop.default_state_model
@@ -63,13 +64,15 @@ def plot_property_vs_state(prop, state_model=None, state_name=None, state_range=
 
 
 def decorate_temperature_axis(axes, temperature_range=(0, np.inf), comparison_set='space propulsion'):
-    """Decorate temperature axis with comparison temperatures.
+    """
+    Decorate temperature axis with comparison temperatures.
 
     References:
-        [1] Lozano, Paulo, "Monopropellant Thrusters", 16.522 Notes, MIT.
+        .. [1] Lozano, Paulo, "Monopropellant Thrusters", 16.522 Notes, MIT.\n
             Online: https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-522-space-propulsion-spring-2015/lecture-notes/MIT16_522S15_Lecture12.pdf
-        [2] Sutton, George P and Oscar Biblarz, Rocket Propulsion Elements, 8th ed., 2010.
-        [3] US Department of Defense, "Global Climatic Data for Developing Military Products", MIL-HDBK-310, 1997.
+        .. [2] Sutton, George P and Oscar Biblarz, Rocket Propulsion Elements, 8th ed., 2010.
+        .. [3] US Department of Defense, "Global Climatic Data for Developing Military Products", MIL-HDBK-310, 1997.
+
     """
     temperature_comparisons = {
         'space propulsion': {
@@ -77,9 +80,9 @@ def decorate_temperature_axis(axes, temperature_range=(0, np.inf), comparison_se
             90.2: 'oxygen boils',
             111.67: 'methane boils',
             273.15 + 25: 'room temp.',
-            1100: 'typ. gas generator',    # see [2], table 5-10.
-            1343: 'hydrazine flame',    # Assuming 40% NH3 decomposed, see [1]
-            3389: '$H_2 + O_2$ flame'    # Mass oxid/fuel ratio = 5.55, see [2]
+            1100: 'typ. gas generator',  # see [2], table 5-10.
+            1343: 'hydrazine flame',  # Assuming 40% NH3 decomposed, see [1]
+            3389: '$H_2 + O_2$ flame'  # Mass oxid/fuel ratio = 5.55, see [2]
         },
         'weather': {
             184: 'Earth record cold',
@@ -89,14 +92,14 @@ def decorate_temperature_axis(axes, temperature_range=(0, np.inf), comparison_se
             273.15 + 100: 'water boils',
         },
         'aviation': {
-            199: 'cold day, 10 km alt.',    # 1% cold day, see [3] table 5.3.2.2.2
+            199: 'cold day, 10 km alt.',  # 1% cold day, see [3] table 5.3.2.2.2
             273.15 + 25: 'room temp.',
-            273.15 + 49: 'hot day, desert',    # 1% hot day, Saharah desert, see [3] sec. 5.1.1.2
-            278 * (1 + 0.2 * 2**2): '$T_{stag}$ at Mach 2',   # 1% hot day at 5 km alt, see [3]
-            278 * (1 + 0.2 * 3**2): '$T_{stag}$ at Mach 3',
-            278 * (1 + 0.2 * 4**2): '$T_{stag}$ at Mach 4',
-            278 * (1 + 0.2 * 5**2): '$T_{stag}$ at Mach 5',
-            278 * (1 + 0.2 * 6**2): '$T_{stag}$ at Mach 6',
+            273.15 + 49: 'hot day, desert',  # 1% hot day, Saharah desert, see [3] sec. 5.1.1.2
+            278 * (1 + 0.2 * 2 ** 2): '$T_{stag}$ at Mach 2',  # 1% hot day at 5 km alt, see [3]
+            278 * (1 + 0.2 * 3 ** 2): '$T_{stag}$ at Mach 3',
+            278 * (1 + 0.2 * 4 ** 2): '$T_{stag}$ at Mach 4',
+            278 * (1 + 0.2 * 5 ** 2): '$T_{stag}$ at Mach 5',
+            278 * (1 + 0.2 * 6 ** 2): '$T_{stag}$ at Mach 6',
             273.15 + 2093: 'kerosene + air flame',
         }
     }
@@ -117,4 +120,4 @@ def decorate_temperature_axis(axes, temperature_range=(0, np.inf), comparison_se
                       rotation=90, color=annotation_color,
                       horizontalalignment='center',
                       verticalalignment='bottom',
-                      bbox={'facecolor': 'white', 'alpha': 0.9, 'edgecolor':'none', 'pad': 3})
+                      bbox={'facecolor': 'white', 'alpha': 0.9, 'edgecolor': 'none', 'pad': 3})

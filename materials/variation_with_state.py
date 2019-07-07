@@ -5,18 +5,21 @@ import numpy as np
 import scipy.interpolate
 import asteval
 
+
 def _create_interp_arrays_from_yaml_table_2d(yaml_dict, state_vars, state_vars_interp_scales):
-    """Create 2d interpolation arrays for `griddata` from a YAML dict.
+    """
+    Create 2d interpolation arrays for `griddata` from a YAML dict.
 
     Arguments:
         yaml_dict (dict): variation with state subdictionary extracted from a YAML file.
         state_vars (list of string): State variable names.
-        state_vars_interp_scales (list of string): Interpolation scale for each state
+        state_vars_interp_scales (list of string): Interpolation scale for each state \
             variable. Should be 'log' or 'linear'.
 
     Returns:
         ndarray: interpolation points.
         ndarray: interpolation values.
+
     """
     if len(state_vars) != 2:
         raise ValueError()
@@ -52,7 +55,8 @@ def _create_interp_arrays_from_yaml_table_2d(yaml_dict, state_vars, state_vars_i
 
 
 def _create_interp_arrays_from_yaml_table(yaml_dict, state_vars, state_vars_interp_scales):
-    """Create 1d or 2d interpolation arrays for `griddata` from a YAML dict.
+    """
+    Create 1d or 2d interpolation arrays for `griddata` from a YAML dict.
 
     Arguments:
         yaml_dict (dict): property dictionary extracted from a YAML file.
@@ -62,6 +66,7 @@ def _create_interp_arrays_from_yaml_table(yaml_dict, state_vars, state_vars_inte
     Returns:
         ndarray: interpolation points.
         ndarray: interpolation values.
+
     """
     if len(state_vars) == 1:
         interp_points = np.array(
@@ -80,7 +85,8 @@ def _create_interp_arrays_from_yaml_table(yaml_dict, state_vars, state_vars_inte
 
 
 class VariationWithState:
-    """A model of a material property's variation with state.
+    """
+    A model of a material property's variation with state.
 
     Arguments:
         representation (string): Description of how the data is represented, e.g. "table".
@@ -91,6 +97,7 @@ class VariationWithState:
         reference (string): Bibtex tag for the source of the data.
 
     """
+
     def __init__(self, representation, state_vars, state_vars_units, value_type, reference):
         self.representation = representation
         self.state_vars = state_vars
@@ -107,7 +114,7 @@ class VariationWithState:
         self.reference = reference
 
     def query_value(self, state):
-        """Query the variation with state model at a particular state.""" 
+        """Query the variation with state model at a particular state."""
         pass
 
     def get_state_domain(self):
@@ -115,16 +122,19 @@ class VariationWithState:
         pass
 
     def is_state_in_domain(self, state):
-        """Check that the state is within the valid domain.
+        """
+        Check that the state is within the valid domain.
+
         Returns:
             bool: True if `state` is in the valid domain for the model.
+
         """
         # Check that all the state variables have been provided in `state`.
         for var_name in self.state_vars:
             if var_name not in state.keys():
                 raise ValueError('{:s} not provided for query'.format(var_name))
 
-        state_domain = self.get_state_domain()    #pylint: disable=assignment-from-no-return
+        state_domain = self.get_state_domain()  # pylint: disable=assignment-from-no-return
         for state_name in state:
             value = state[state_name]
             smin = state_domain[state_name][0]
@@ -136,7 +146,7 @@ class VariationWithState:
     def __str__(self):
         state_var_str = ', '.join(self.state_vars)
         domain_str_list = []
-        domain = self.get_state_domain()    #pylint: disable=assignment-from-no-return
+        domain = self.get_state_domain()  # pylint: disable=assignment-from-no-return
         for name in self.state_vars:
             domain_str_list.append(
                 '{:.4g} to {:.4g} {:s}'.format(
@@ -148,6 +158,7 @@ class VariationWithState:
 
 class VariationWithStateTable(VariationWithState):
     """A material property's variation with state, represented as a table."""
+
     def __init__(self, state_vars, state_vars_units, value_type, reference,
                  interp_points, interp_values, state_vars_interp_scales):
         VariationWithState.__init__(self, 'table', state_vars, state_vars_units, value_type, reference)
@@ -156,22 +167,25 @@ class VariationWithStateTable(VariationWithState):
         self._state_vars_interp_scales = state_vars_interp_scales
 
     def query_value(self, state, method='linear', fill_value=np.nan, rescale=True):
-        """Query the value of the property at a particular state.
+        """
+        Query the value of the property at a particular state.
 
         Arguments:
             state (dict): The state at which to query the values. It must have
                 a key for each variable name in `self.state_vars`. `state[s1]`
                 specifies the query point for state variable `s1`. The query point
-                for each state may be an array or a scalar. e.g.
-                    `state={'s1': 0, 's2': 1}`
-                    `state={'s1': 0, 's2': [1, 2, 3]}`
-                    and
-                    `state={'s1': [5, 6, 7], 's2': [1, 2, 3]}`
+                for each state may be an array or a scalar. e.g.\n
+                    \t`state={'s1': 0, 's2': 1}`\n
+                    \t`state={'s1': 0, 's2': [1, 2, 3]}`\n
+                    \tand\n
+                    \t`state={'s1': [5, 6, 7], 's2': [1, 2, 3]}`\n
                 are all valid.
-        `method`, `fill_value`, and `rescale` are passed through to `scipy.interpolate.griddata`.
+
+            `method`, `fill_value`, and `rescale`: are passed through to `scipy.interpolate.griddata`.
 
         Returns:
             scalar or array: value(s) of the property at the provided state(s).
+
         """
         # Check that all the state variables have been provided in `state`.
         for var_name in self.state_vars:
@@ -193,18 +207,18 @@ class VariationWithStateTable(VariationWithState):
             # Handle cases with 1 array and 1 scalar state
             # by using `np.full_like` to convert the scalar state to an array
             if np.ndim(state[self.state_vars[0]]) > 0 \
-            and np.ndim(state[self.state_vars[1]]) == 0:
+                    and np.ndim(state[self.state_vars[1]]) == 0:
                 state[self.state_vars[1]] = np.full_like(
                     state[self.state_vars[0]], state[self.state_vars[1]])
             if np.ndim(state[self.state_vars[0]]) == 0 \
-            and np.ndim(state[self.state_vars[1]]) > 0:
+                    and np.ndim(state[self.state_vars[1]]) > 0:
                 state[self.state_vars[0]] = np.full_like(
                     state[self.state_vars[1]], state[self.state_vars[0]])
             # Handle case where both state queries are arrays
             # This is intentionally *not* an `elif` - the above cases should
             # flow into this.
             if np.ndim(state[self.state_vars[0]]) > 0 \
-            and np.ndim(state[self.state_vars[1]]) > 0:
+                    and np.ndim(state[self.state_vars[1]]) > 0:
                 if len(state[self.state_vars[0]]) != len(state[self.state_vars[1]]):
                     raise ValueError('Query arrays must be of equal length for each state.')
                 is_state_scalar = False
@@ -228,13 +242,15 @@ class VariationWithStateTable(VariationWithState):
         return values
 
     def get_state_domain(self):
-        """Get the domain over which the property's variation with state model is valid.
+        """
+        Get the domain over which the property's variation with state model is valid.
 
         Returns:
             dict: each key is the name of a state variable.
             Values are tuples `(smin, smax)` where `smin` is the minimum bound
             of the valid domain in that state variable and `smax` is the maximum bound.
             The units of `smin` and `smax` are given by `state_vars_units[key]`.
+
         """
         if len(self.state_vars) == 1:
             # Assumes interpolation points are in ascending order.
@@ -258,24 +274,26 @@ class VariationWithStateTable(VariationWithState):
 
 
 class VariationWithStateEquation(VariationWithState):
-    """A material property's variation with state, represented as an equation.
+    """
+    A material property's variation with state, represented as an equation.
 
     Arguments:
         state_vars (list of string): Names of the state variables.
         state_vars_units (dict of string): Units of measure for each state variable.
-        value_type (string): Is the stored value a multiplier on the default value,
-            or does it override the default value?
+        value_type (string): Is the stored value a multiplier on the default value, or does it override the default?
         reference (string): Bibtex tag for the source of the data.
         expression (string): A mathematical expression for the value of the property
             as a function of the state variables. This should be a string containing
-            python math operators, the state variable names, and `math` functions, e.g.
-                `'value = 1.23 * temperature + 4.5 * temperature**2'`
-                `'value = 5.6 * exp(7.8 / temperature)'`
+            python math operators, the state variable names, and \'math\' functions, e.g.\n
+            \t\'value = 1.23 * temperature + 4.5 * temperature**2\' or \n
+            \t\'value = 5.6 * exp(7.8 / temperature)\'\n
             When evaluated, this expression gives the value of the property.
         state_domain (dict): each key is the name of a state variable.
-            Values are tuples `(smin, smax)` where `smin` is the minimum bound
-            of the valid domain in that state variable and `smax` is the maximum bound.
+            Values are tuples \'(smin, smax)\' where \'smin\' is the minimum bound
+            of the valid domain in that state variable and \'smax\' is the maximum bound.
+
     """
+
     def __init__(self, state_vars, state_vars_units, value_type, reference,
                  expression, state_domain):
         VariationWithState.__init__(self, 'equation', state_vars, state_vars_units, value_type, reference)
@@ -292,27 +310,29 @@ class VariationWithStateEquation(VariationWithState):
         for name in state_vars:
             if name not in state_domain:
                 raise ValueError('The provided `state_domain` dict does not'
-                    + ' have a domain for state {:s}'.format(name))
+                                 + ' have a domain for state {:s}'.format(name))
         self.state_domain = state_domain
 
-
     def query_value(self, state):
-        """Query the value of the property at a particular state.
+        """
+        Query the value of the property at a particular state.
 
         Arguments:
             state (dict): The state at which to query the values. It must have
                 a key for each variable name in `self.state_vars`. `state[s1]`
                 specifies the query point for state variable `s1`. The query point
-                for each state may be an array or a scalar. e.g.
-                    `state={'s1': 0, 's2': 1}`
-                    `state={'s1': 0, 's2': np.array([1, 2, 3])}`
-                    and
-                    `state={'s1': np.array([5, 6, 7]), 's2': np.array([1, 2, 3])}`
+                for each state may be an array or a scalar. e.g.\n
+                    \t`state={'s1': 0, 's2': 1}`\n
+                    \t`state={'s1': 0, 's2': np.array([1, 2, 3])}`\n
+                    \tand\n
+                    \t`state={'s1': np.array([5, 6, 7]), 's2': np.array([1, 2, 3])}`\n
                 are all valid.
 
         Returns:
             scalar or array: value(s) of the property at the provided state(s).
+
         """
+
         # Check that all the state variables have been provided in `state`.
         for var_name in self.state_vars:
             if var_name not in state.keys():
@@ -325,13 +345,15 @@ class VariationWithStateEquation(VariationWithState):
         return result
 
     def get_state_domain(self):
-        """Get the domain over which the property's variation with state model is valid.
+        """
+        Get the domain over which the property's variation with state model is valid.
 
         Returns:
             dict: each key is the name of a state variable.
             Values are tuples `(smin, smax)` where `smin` is the minimum bound
             of the valid domain in that state variable and `smax` is the maximum bound.
             The units of `smin` and `smax` are given by `state_vars_units[key]`.
+
         """
         return self.state_domain
 
@@ -360,4 +382,4 @@ def build_from_yaml(yaml_dict):
             expression, state_domain)
     else:
         raise NotImplementedError('Representations other than table or equation are'
-            +' not yet supported.')
+                                  + ' not yet supported.')

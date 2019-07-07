@@ -6,8 +6,10 @@ import numpy as np
 from materials.property import Property, StateDependentProperty
 import materials.variation_with_state as vstate
 
+
 class TestProperty(unittest.TestCase):
     """Tests for "simple" Property."""
+
     def test_init(self):
         """Test constructor."""
         yaml_dict = {'default_value': 1.0, 'units': 'MPa', 'reference': 'mmpds'}
@@ -43,7 +45,7 @@ class TestStateDependentProperty(unittest.TestCase):
                     'representation': 'table',
                     'reference': 'mmpds',
                     'temperature': np.arange(4),
-                    'values': np.arange(4)**2,
+                    'values': np.arange(4) ** 2,
                 }
             }
         }
@@ -52,14 +54,14 @@ class TestStateDependentProperty(unittest.TestCase):
 
         # Action and verification
         # Check queries at given points
-        self.assertEqual(prop.query_value({'temperature': 1}), 1**2 * dv)
-        self.assertEqual(prop.query_value({'temperature': 2}), 2**2 * dv)
+        self.assertEqual(prop.query_value({'temperature': 1}), 1 ** 2 * dv)
+        self.assertEqual(prop.query_value({'temperature': 2}), 2 ** 2 * dv)
         # Check interpolation between given points
         self.assertAlmostEqual(prop.query_value(
             {'temperature': 2.5}, model_args_dict=model_args_dict), 6.5 * dv)
         # Check bad query
         with self.assertRaises(ValueError):
-            prop.query_value({'fish': 1.})    # fish is not a state variable.
+            prop.query_value({'fish': 1.})  # fish is not a state variable.
 
     def test_init_2d(self):
         """Test init with a 2-d lookup table."""
@@ -78,11 +80,11 @@ class TestStateDependentProperty(unittest.TestCase):
                     'exposure time': {
                         0.0: {
                             'temperature': np.arange(4),
-                            'values': np.arange(4)**2
+                            'values': np.arange(4) ** 2
                         },
                         0.1: {
                             'temperature': np.arange(4),
-                            'values': (np.arange(4) + 0.1)**2
+                            'values': (np.arange(4) + 0.1) ** 2
                         },
                     }
                 }
@@ -118,11 +120,11 @@ class TestStateDependentProperty(unittest.TestCase):
                     'exposure time': {
                         0.0: {
                             'temperature': np.arange(4),
-                            'values': np.arange(4)**2
+                            'values': np.arange(4) ** 2
                         },
                         0.1: {
                             'temperature': np.arange(4),
-                            'values': (np.arange(4) + 0.5)**2
+                            'values': (np.arange(4) + 0.5) ** 2
                         },
                     }
                 }
@@ -134,27 +136,27 @@ class TestStateDependentProperty(unittest.TestCase):
         # Action and verification
         # Check queries at given points
         result = prop.query_value({'exposure time': 0, 'temperature': 1})
-        self.assertEqual(result, 1**2 * dv)
+        self.assertEqual(result, 1 ** 2 * dv)
         result = prop.query_value({'exposure time': 0.1, 'temperature': 3})
-        self.assertEqual(result, 3.5**2 * dv)
+        self.assertEqual(result, 3.5 ** 2 * dv)
         # Check interpolation between given points
         result = prop.query_value({'exposure time': 0, 'temperature': 2.5},
                                   model_args_dict=model_args_dict)
         self.assertAlmostEqual(result, 6.5 * dv)
         result = prop.query_value({'exposure time': 0.05, 'temperature': 2},
                                   model_args_dict=model_args_dict)
-        self.assertAlmostEqual(result, (2**2 + 2.5**2)/2 * dv)
+        self.assertAlmostEqual(result, (2 ** 2 + 2.5 ** 2) / 2 * dv)
 
         # Check query of multiple points
         result = prop.query_value({'exposure time': [0, 0.05], 'temperature': [1, 2]})
-        self.assertEqual(result[0], 1**2 * dv)
-        self.assertAlmostEqual(result[1], (2**2 + 2.5**2)/2 * dv)
+        self.assertEqual(result[0], 1 ** 2 * dv)
+        self.assertAlmostEqual(result[1], (2 ** 2 + 2.5 ** 2) / 2 * dv)
 
         # Check bad query
         with self.assertRaises(ValueError):
-            prop.query_value({'fish': 1., 'temperature': 1})    # fish is not a state variable.
+            prop.query_value({'fish': 1., 'temperature': 1})  # fish is not a state variable.
         with self.assertRaises(ValueError):
-            prop.query_value({'fish': 1., 'exposure time': 1})    # fish is not a state variable.
+            prop.query_value({'fish': 1., 'exposure time': 1})  # fish is not a state variable.
 
     def test_query_1d_eqn(self):
         """Test query_value with a single varaible equation."""
@@ -180,12 +182,11 @@ class TestStateDependentProperty(unittest.TestCase):
 
         # Action and verification
         # Check good queries
-        self.assertEqual(prop.query_value({'temperature': 1}), 1**2 * dv)
-        self.assertEqual(prop.query_value({'temperature': 2}), 2**2 * dv)
+        self.assertEqual(prop.query_value({'temperature': 1}), 1 ** 2 * dv)
+        self.assertEqual(prop.query_value({'temperature': 2}), 2 ** 2 * dv)
         # Check bad query
         with self.assertRaises(ValueError):
-            prop.query_value({'fish': 1.})    # fish is not a state variable.
-
+            prop.query_value({'fish': 1.})  # fish is not a state variable.
 
     def test_getitem(self):
         """Unit test for __getitem__"""
@@ -203,7 +204,7 @@ class TestStateDependentProperty(unittest.TestCase):
                     'representation': 'table',
                     'reference': 'mmpds',
                     'temperature': np.arange(4),
-                    'values': np.arange(4)**2,
+                    'values': np.arange(4) ** 2,
                 }
             }
         }
@@ -232,7 +233,7 @@ class TestStateDependentProperty(unittest.TestCase):
                     'representation': 'table',
                     'reference': 'mmpds',
                     'temperature': np.arange(4),
-                    'values': np.arange(4)**2,
+                    'values': np.arange(4) ** 2,
                 }
             }
         }
@@ -243,7 +244,6 @@ class TestStateDependentProperty(unittest.TestCase):
 
         # Verification
         print('\n' + string + '\n')
-
 
 
 if __name__ == '__main__':

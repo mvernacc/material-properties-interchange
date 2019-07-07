@@ -6,6 +6,7 @@ import materials.variation_with_state as vstate
 
 class Property:
     """A property of a material."""
+
     def __init__(self, name, yaml_dict):
         self.name = name
         self.default_value = yaml_dict['default_value']
@@ -23,6 +24,7 @@ class Property:
 
 class StateDependentProperty(Property):
     """A property of a material which depends on state (e.g. temperature)."""
+
     def __init__(self, name, yaml_dict):
         Property.__init__(self, name, yaml_dict)
         self.variations_with_state = {}
@@ -47,7 +49,7 @@ class StateDependentProperty(Property):
             raise KeyError(
                 'This Property does not have a {:s} variations with state model'.format(key)
                 + '\nThe valid keys are {}'.format(self.variations_with_state.keys())
-                )
+            )
         return self.variations_with_state[key]
 
     def __str__(self):
