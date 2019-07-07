@@ -156,6 +156,36 @@ class TestStateDependentProperty(unittest.TestCase):
         with self.assertRaises(ValueError):
             prop.query_value({'fish': 1., 'exposure time': 1})    # fish is not a state variable.
 
+    def test_query_1d_eqn(self):
+        """Test query_value with a single varaible equation."""
+        # Setup
+        dv = 2.0
+        yaml_dict = {
+            'default_value': dv,
+            'units': 'MPa',
+            'reference': 'mmpds',
+            'variations_with_state': {
+                'thermal': {
+                    'state_vars': ['temperature'],
+                    'state_vars_units': {'temperature': 'kelvin'},
+                    'value_type': 'multiplier',
+                    'representation': 'equation',
+                    'reference': 'reference',
+                    'expression': 'value = temperature**2',
+                    'state_domain': {'temperature': (0, 1000)},
+                }
+            }
+        }
+        prop = StateDependentProperty('name', yaml_dict)
+
+        # Action and verification
+        # Check good queries
+        self.assertEqual(prop.query_value({'temperature': 1}), 1**2 * dv)
+        self.assertEqual(prop.query_value({'temperature': 2}), 2**2 * dv)
+        # Check bad query
+        with self.assertRaises(ValueError):
+            prop.query_value({'fish': 1.})    # fish is not a state variable.
+
 
     def test_getitem(self):
         """Unit test for __getitem__"""

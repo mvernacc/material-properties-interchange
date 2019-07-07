@@ -27,8 +27,7 @@ class StateDependentProperty(Property):
         Property.__init__(self, name, yaml_dict)
         self.variations_with_state = {}
         for vs_name, vs_subdict in yaml_dict['variations_with_state'].items():
-            if vs_subdict['representation'] == 'table':
-                self.variations_with_state[vs_name] = vstate.build_from_yaml(vs_subdict)
+            self.variations_with_state[vs_name] = vstate.build_from_yaml(vs_subdict)
         self.default_state_model = list(self.variations_with_state.keys())[0]
 
     def query_value(self, state, state_model=None, model_args_dict=None):
