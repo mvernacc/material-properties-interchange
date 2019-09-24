@@ -38,6 +38,24 @@ class TestAISI316L(unittest.TestCase):
         print('\n' + str(aisi316L_am_renishaw) + '\n')
         print('\n' + str(aisi316L_am_eos) + '\n')
 
+class TestTi6Al4VELI(unittest.TestCase):
+    """Unit tests for Ti-6Al-4V ELI."""
+    def test_load(self):
+        """Make sure the material loads from the YAML file w/o throwing errors."""
+        # Action
+        ti64_bar = load('Ti-6Al-4V_ELI', 'bar', 'annealed')
+        ti64_am_renishaw = load('Ti-6Al-4V_ELI', 'additive, Renishaw', 'annealed')
+        ti64_am_eos = load('Ti-6Al-4V_ELI', 'additive, EOS', 'annealed')
+
+        # Verificaiton
+        self.assertEqual(type(ti64_bar), Material)
+        self.assertEqual(type(ti64_am_renishaw), Material)
+        self.assertEqual(type(ti64_am_eos), Material)
+        # TODO automate checking this
+        print('\n' + str(ti64_bar) + '\n')
+        print('\n' + str(ti64_am_renishaw) + '\n')
+        print('\n' + str(ti64_am_eos) + '\n')
+
 
 class TestAl6061(unittest.TestCase):
     """Unit tests for Al 6061."""
