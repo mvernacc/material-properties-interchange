@@ -33,8 +33,8 @@ def main():
     y_units = al6061['strength_tensile_ultimate'].units
     plt.ylabel('Ultimate Tensile Strength $\\sigma_{{ut}}$ [{:s}]'.format(y_units))
 
-    plt.show()
 
 
 if __name__ == '__main__':
     main()
+    plt.show()
