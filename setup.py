@@ -1,6 +1,24 @@
 """Standard python setup script for materials."""
 import setuptools
 
+INSTALL_REQUIRES = [
+    'numpy',
+    'scipy',
+    'pyyaml',
+    'asteval',
+    ]
+TEST_REQUIRES = [
+    'pytest',
+    'coverage',
+    'pytest-cov',
+    'matplotlib',
+    ]
+DOCS_REQUIRES = [
+    'sphinx',
+    'sphinx_rtd_theme',
+    'sphinxcontrib-napoleon',
+    ]
+
 with open('README.md', 'r') as fh:
     LONG_DESCRIPTION = fh.read()
 
@@ -21,7 +39,11 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
     ],
-    install_requires=['scipy', 'numpy', 'pyyaml'],
+    install_requires=INSTALL_REQUIRES,
+    extras_require={
+        'test': TEST_REQUIRES + INSTALL_REQUIRES,
+        'docs': DOCS_REQUIRES + INSTALL_REQUIRES,
+        },
     keywords='material analysis-script engineering material-properties mmpds',
     license=LICENSE
 )
