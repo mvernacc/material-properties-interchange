@@ -1,0 +1,18 @@
+language: python
+python:
+  - "3.7"
+
+before_install:
+  - pip install -U pip
+  - pip install codecov
+
+# command to install dependencies
+install:
+  - pip install -e ".[test]" .
+
+# command to run tests
+script:
+  - pytest
+
+after_success:
+  - codecov # submit coverage

@@ -9,4 +9,4 @@ def get_database_dir():
         string
     """
     here = os.path.dirname(os.path.realpath(__file__))
-    return os.path.join(here, '../materials_data')
+    return os.path.join(here, 'materials_data')

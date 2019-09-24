@@ -2,7 +2,7 @@
 import os.path
 import unittest
 import numpy as np
-from materials import Material, load_from_yaml, get_database_dir
+from materials import Material, load
 
 
 class TestAISI304(unittest.TestCase):
@@ -10,16 +10,13 @@ class TestAISI304(unittest.TestCase):
 
     def test_load(self):
         """Make sure the material loads from the YAML file w/o throwing errors."""
-        # Setup
-        filename = os.path.join(get_database_dir(), 'AISI_304.yaml')
-
         # Action
-        asis304 = load_from_yaml(filename, 'sheet and strip', 'annealed')
+        aisi304 = load('AISI_304', 'sheet and strip', 'annealed')
 
         # Verificaiton
-        self.assertEqual(type(asis304), Material)
+        self.assertEqual(type(aisi304), Material)
         # TODO automate checking this
-        print('\n' + str(asis304) + '\n')
+        print('\n' + str(aisi304) + '\n')
 
 
 class TestAl6061(unittest.TestCase):
@@ -27,11 +24,8 @@ class TestAl6061(unittest.TestCase):
 
     def test_load(self):
         """Make sure the material loads from the YAML file w/o throwing errors."""
-        # Setup
-        filename = os.path.join(get_database_dir(), 'Al_6061.yaml')
-
         # Action
-        al6061 = load_from_yaml(filename, 'extruded, thickness > 1 inch', 'T6')
+        al6061 = load('Al_6061', 'extruded, thickness > 1 inch', 'T6')
 
         # Verificaiton
         self.assertEqual(type(al6061), Material)

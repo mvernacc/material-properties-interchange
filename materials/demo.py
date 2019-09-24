@@ -6,8 +6,7 @@ import materials
 
 
 def main():
-    filename = os.path.join(materials.get_database_dir(), 'Al_6061.yaml')
-    al6061 = materials.load_from_yaml(filename, 'extruded, thickness > 1 inch', 'T6')
+    al6061 = materials.load('Al_6061', 'extruded, thickness > 1 inch', 'T6')
 
     temperature = np.linspace(80, 580)  # [units: kelvin]
     modulus = al6061['youngs_modulus'].query_value({'temperature': temperature})
@@ -34,8 +33,8 @@ def main():
     y_units = al6061['strength_tensile_ultimate'].units
     plt.ylabel('Ultimate Tensile Strength $\\sigma_{{ut}}$ [{:s}]'.format(y_units))
 
-    plt.show()
 
 
 if __name__ == '__main__':
     main()
+    plt.show()
