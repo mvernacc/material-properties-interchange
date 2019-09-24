@@ -6,3 +6,4 @@ reactor.egg-info
 .idea
 .idea/*
 ./reactor/__pycache__
+.coverage
