@@ -150,7 +150,7 @@ def load(name, form, condition):
             + '\nAvailable materials are: {:s}'.format(str(avail_matls)))
     utf8_reader = codecs.getreader('utf-8')
     with utf8_reader(pkg_resources.resource_stream('materials', resource_name)) as yaml_stream:
-        matl_dict = yaml.load(yaml_stream)
+        matl_dict = yaml.full_load(yaml_stream)
 
     # Check that the reqested form and condition are present
     if not form in matl_dict['forms']:
@@ -197,7 +197,7 @@ def load_from_yaml(filename, form, condition):
         Material
     """
     with open(filename, 'r') as yaml_stream:
-        matl_dict = yaml.load(yaml_stream)
+        matl_dict = yaml.full_load(yaml_stream)
 
     # Check that the reqested form and condition are present
     if not form in matl_dict['forms']:
