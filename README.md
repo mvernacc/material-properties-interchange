@@ -1,5 +1,8 @@
 Material Properties Interchange
 ===============================
+[![Build Status](https://travis-ci.org/mvernacc/material-properties-interchange.svg?branch=master)](https://travis-ci.org/mvernacc/material-properties-interchange) [![codecov](https://codecov.io/gh/mvernacc/material-properties-interchange/branch/master/graph/badge.svg)](https://codecov.io/gh/mvernacc/material-properties-interchange)
+
+
 
 Do for material properties what STEP files do for 3D geometry.
 
