@@ -45,5 +45,6 @@ setuptools.setup(
         'docs': DOCS_REQUIRES + INSTALL_REQUIRES,
         },
     keywords='material analysis-script engineering material-properties mmpds',
-    license=LICENSE
+    license=LICENSE,
+    include_package_data=True,
 )

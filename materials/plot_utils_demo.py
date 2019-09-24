@@ -7,8 +7,7 @@ from materials import plot_utils
 
 
 def main():
-    filename = os.path.join(materials.get_database_dir(), 'Al_6061.yaml')
-    al6061 = materials.load_from_yaml(filename, 'extruded, thickness > 1 inch', 'T6')
+    al6061 = materials.load('Al_6061', 'extruded, thickness > 1 inch', 'T6')
 
     axes = plot_utils.plot_property_vs_state(
         al6061.properties['youngs_modulus'], 'thermal', 'temperature')
@@ -16,8 +15,7 @@ def main():
     plt.title('Stiffness of {:s} vs. temperature'.format(al6061.name))
     plt.grid()
 
-    plt.show()
-
 
 if __name__ == '__main__':
     main()
+    plt.show()

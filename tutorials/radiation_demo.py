@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 import materials
 
 def main():
-    filename = os.path.join(materials.get_database_dir(), 'AISI_304.yaml')
-    aisi304 = materials.load_from_yaml(filename, 'sheet and strip', 'annealed')
+    aisi304 = materials.load('AISI_304', 'sheet and strip', 'annealed')
 
     fig, axes = plt.subplots(nrows=2, ncols=2, sharex='col', sharey='row', figsize=(10, 6))
 

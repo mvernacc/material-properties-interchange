@@ -6,8 +6,7 @@ from materials import plot_utils
 
 def main():
     # Load copper properties from the data file
-    filename = os.path.join(materials.get_database_dir(), 'copper.yaml')
-    copper = materials.load_from_yaml(filename, 'wire', 'annealed')
+    copper = materials.load('copper', 'wire', 'annealed')
 
     # Print a summary of the available properties for copper
     print(copper)

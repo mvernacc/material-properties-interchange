@@ -1,5 +1,7 @@
 """Representation of a material's engineering properties and other data."""
+import codecs
 import yaml
+import pkg_resources
 from materials.property import Property, StateDependentProperty
 
 
@@ -127,6 +129,51 @@ class Material:
         string += 'Properties for the "{:s}" form, "{:s}" condition:\n'.format(self.form, self.condition)
         string += '\n\n'.join([str(prop) for prop in self.properties.values()])
         return string
+
+
+def load(name, form, condition):
+    """Load a material.
+
+    Arguments:
+        name (string): name of the material record (e.g. yaml file name, less .yaml).
+        form : See `load_from_yaml`.
+        condition : See `load_from_yaml`.
+    """
+    resource_name = 'materials_data/' + name
+    if '.yaml' not in resource_name:
+        resource_name += '.yaml'
+    if not pkg_resources.resource_exists('materials', resource_name):
+        avail_matls = [s.strip('.yaml') for s in
+                       pkg_resources.resource_listdir('materials', 'materials_data')]
+        raise ValueError(
+            'material "{:s}" not found in database.'.format(name)
+            + '\nAvailable materials are: {:s}'.format(str(avail_matls)))
+    utf8_reader = codecs.getreader('utf-8')
+    with utf8_reader(pkg_resources.resource_stream('materials', resource_name)) as yaml_stream:
+        matl_dict = yaml.load(yaml_stream)
+
+    # Check that the reqested form and condition are present
+    if not form in matl_dict['forms']:
+        raise ValueError('Form {:s} not present in {:s}'.format(form, name))
+    if not condition in matl_dict['forms'][form]['conditions']:
+        raise ValueError('Condition {:s} not present in {:s}, {:s}'.format(
+            condition, form, name))
+
+    matl_name = matl_dict['name']
+    category = matl_dict['category']
+    if 'subcategory' in matl_dict:
+        subcategory = matl_dict['subcategory']
+    else:
+        subcategory = None
+    references = matl_dict['references']
+    elemental_composition = matl_dict['elemental_composition']
+
+    properties_dict = matl_dict['forms'][form]['conditions'][condition]['properties']
+
+    matl = Material(matl_name, form, condition, category, subcategory,
+                    references, properties_dict, elemental_composition)
+
+    return matl
 
 
 def load_from_yaml(filename, form, condition):

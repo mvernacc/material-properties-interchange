@@ -2,7 +2,7 @@
 import os.path
 import unittest
 import numpy as np
-from materials import Material, load_from_yaml, get_database_dir
+from materials import Material, load_from_yaml, get_database_dir, load
 from materials.material import build_properties
 from materials.property import Property
 
@@ -120,6 +120,28 @@ class TestLoadFromYaml(unittest.TestCase):
         result = al6061.properties['youngs_modulus'].query_value({'temperature': 294})
         self.assertAlmostEqual(result, 68.3, delta=0.5)
         print('\n' + str(al6061) + '\n')
+
+
+class TestLoad(unittest.TestCase):
+    """unit tests for load."""
+
+    def test_al6061_T6_extruded(self):
+        # Action
+        al6061 = load('Al_6061', 'extruded, thickness > 1 inch', 'T6')
+
+        # Verification
+        self.assertEqual(al6061.category, 'metal')
+        self.assertEqual(al6061.properties['solidus_temperature'].query_value(), 855.)
+        self.assertEqual(al6061.properties['youngs_modulus'].units, 'GPa')
+        result = al6061.properties['youngs_modulus'].query_value({'temperature': 294})
+        self.assertAlmostEqual(result, 68.3, delta=0.5)
+        print('\n' + str(al6061) + '\n')
+
+    def test_bogus(self):
+        """Asking for a bogus material should raise an error."""
+        with self.assertRaises(ValueError) as context:
+            load('bogus', 'a', 'b')
+        self.assertTrue('Available materials' in str(context.exception))
 
 
 if __name__ == '__main__':
