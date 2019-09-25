@@ -72,7 +72,7 @@ common_properties: &common_properties
       thermal:
         state_vars: ['temperature']
         state_vars_units: {'temperature': 'kelvin'}
-        value_type: multiplier
+        value_type: override
         representation: table
         reference: 'NiAISI9004'
         temperature: [300., 366., 422., 478., 533., 589., 644., 700., 755., 811.,
