@@ -56,6 +56,23 @@ class TestTi6Al4VELI(unittest.TestCase):
         print('\n' + str(ti64_am_renishaw) + '\n')
         print('\n' + str(ti64_am_eos) + '\n')
 
+class TestIn718(unittest.TestCase):
+    """Unit tests for In718."""
+    def test_load(self):
+        """Make sure the material loads from the YAML file w/o throwing errors."""
+        # Action
+        in718_bar = load('In718', 'bar', 'solution treated and aged')
+        in718_am_renishaw = load('In718', 'additive, Renishaw', 'solution treated and aged')
+        in718_am_eos = load('In718', 'additive, EOS', 'solution treated and aged')
+
+        # Verificaiton
+        self.assertEqual(type(in718_bar), Material)
+        self.assertEqual(type(in718_am_renishaw), Material)
+        self.assertEqual(type(in718_am_eos), Material)
+        # TODO automate checking this
+        print('\n' + str(in718_bar) + '\n')
+        print('\n' + str(in718_am_renishaw) + '\n')
+        print('\n' + str(in718_am_eos) + '\n')
 
 class TestAl6061(unittest.TestCase):
     """Unit tests for Al 6061."""
