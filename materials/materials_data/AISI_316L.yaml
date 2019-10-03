@@ -1,0 +1,169 @@
+name: AISI 316L
+category: metal
+subcategory: stainless steel
+uns_code: S31603
+
+references:    # In bibtex format
+  - |
+    @techreport{mmpds01,
+      author = {Richard C Rice and Jana L Jackson and John Bakuckas and Steven Thompson},
+      title = {Metallic Materials Properties Development and Standardization (MMPDS)},
+      institution = {U.S. Department of Transportation, Federal Aviation Administration},
+      year = {2001},
+    }
+  - |
+    @techreport{NiAISI9004,
+      title = {High-{Temperature} {Characteristics} of {Stainless} {Steels}},
+      url = {https://www.nickelinstitute.org/en/TechnicalLibrary/AISI/9004_High_TemperatureCharacteristicsofStainlessSteel.aspx},
+      number = {9004},
+      author = {{Nickel Development Institute and American Iron and Steel Institute}},
+      pages = {47},
+    }
+  - |
+    @misc{azom316L,
+      title = {Stainless {Steel} - {Grade} 316L ({UNS} {S}31603)},
+      url = {https://www.azom.com/article.aspx?ArticleID=2382},
+      month = feb,
+      year = {2004},
+    }
+  - |
+    @techreport{renishaw316L,
+      title = {{SS} 316L-0407 powder for additive manufacturing},
+      url = {https://www.renishaw.com/media/pdf/en/f8cba72a843440d3bd8a09fd5021ad89.pdf},
+      number = {H-5800-3001-03-A},
+      author = {{Renishaw plc}},
+      month = apr,
+      year = {2018},
+    }
+  - |
+    @techreport{eos316L,
+      title = {Material {Data} {Sheet}: {EOS} {StainlessSteel} 316L},
+      url = {https://www.eos.info/material-m/download/material-datasheet-stainlesssteel-316l.pdf},
+      author = {{EOS GmbH}},
+      year = {2014},
+    }
+
+elemental_composition:
+  C: [0, 0.03]
+  Cr: [16., 18.]
+  Fe: [62.045, 72.0]
+  Mn: [0, 2.0]
+  Ni: [10.0, 14.0]
+  P: [0, 0.045]
+  Si: [0, 0.75]
+  S: [0, 0.03]
+  Mo: [2.0, 3.0]
+  N: [0, 0.1]
+
+common_properties: &common_properties
+  density:
+    units: 'kg m^-3'
+    default_value: 8000.
+    reference: azom316L
+  poissons_ratio:
+    units: dimensionless
+    default_value: 0.27
+    reference: mmpds01
+  youngs_modulus:
+    units: GPa
+    default_value: 193.
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': 'kelvin'}
+        value_type: override
+        representation: table
+        reference: 'NiAISI9004'
+        temperature: [300., 366., 422., 478., 533., 589., 644., 700., 755., 811.,
+          866., 922., 978., 1033., 1089.]
+        values: [193., 194., 190., 185., 181., 177., 172., 167., 162., 157., 153.,
+          148., 143., 138., 132.]
+
+
+common_state_variations:    # State variations that are common between forms or conditions.
+  annealed_strength_tensile_ultimate_thermal: &annealed_strength_tensile_ultimate_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: override
+    units: MPa
+    representation: table
+    reference: 'NiAISI9004'
+    temperature: [300., 422., 533., 644., 755., 866., 978., 1089., 1200., 1311., 1366.]
+    values: [579., 517., 503., 500., 484., 452., 345., 186., 80., 39., 28.]
+    note: 'Data for Stainless Steel 316'
+  annealed_strength_tensile_yield_thermal: &annealed_strength_tensile_yield_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: override
+    units: MPa
+    representation: table
+    reference: 'NiAISI9004'
+    temperature: [300., 422., 533., 644., 755., 866., 978., 1089.]
+    values: [290., 201., 172., 159., 148., 140., 131., 110.]
+    note: 'Data for Stainless Steel 316'
+  annealed_elongation_thermal: &annealed_elongation_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: override
+    units: percent
+    representation: table
+    reference: 'NiAISI9004'
+    temperature: [300., 422., 533., 644., 755., 866., 978., 1089., 1200., 1311., 1366.]
+    values: [50., 53., 49., 47., 47., 44., 43., 42., 67., 60., 75.]
+
+
+forms:
+  sheet:
+    conditions:
+      annealed:
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 579.
+            reference: NiAISI9004
+            variations_with_state:
+              thermal:
+                <<: *annealed_strength_tensile_ultimate_thermal
+          strength_tensile_yield:
+            units: MPa
+            default_value: 290.
+            reference: NiAISI9004
+            variations_with_state:
+              thermal:
+                <<: *annealed_strength_tensile_yield_thermal
+          elongation: # at break in 2 inches
+            units: percent
+            default_value: 50.
+            reference: NiAISI9004
+            variations_with_state:
+              thermal:
+                <<: *annealed_elongation_thermal
+  'additive, Renishaw':
+    conditions:
+      'as-built':
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 607. # min. of range on spec sheet, weakest direction
+            reference: renishaw316L
+          strength_tensile_yield:
+            units: MPa
+            default_value: 480. # min. of range on spec sheet, weakest direction
+            reference: renishaw316L
+            'AM, Renishaw':
+  'additive, EOS':
+    conditions:
+      'as-built':
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 485. # min. of range on spec sheet, weakest direction
+            reference: eos316L
+          strength_tensile_yield:
+            units: MPa
+            default_value: 380. # min. of range on spec sheet, weakest direction
+            reference: eos316L

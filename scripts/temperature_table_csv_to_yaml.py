@@ -40,7 +40,7 @@ def main(args):
                 yaml_dict[name] = make_yaml_dict(os.path.join(args.in_filename, file), args)
     else:
         yaml_dict = make_yaml_dict(args.in_filename, args)
-    yaml_doc = yaml.dump(yaml_dict)
+    yaml_doc = yaml.dump(yaml_dict, default_flow_style=True)
     print(yaml_doc)
     with open('out.yaml', 'w') as outfile:
         outfile.write(yaml_doc)

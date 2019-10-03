@@ -1,0 +1,181 @@
+name: Ti-6Al-4V ELI
+category: metal
+subcategory: titanium alloy
+uns_code: R56401
+
+references:    # In bibtex format
+  - |
+    @techreport{mmpds01,
+      author = {Richard C Rice and Jana L Jackson and John Bakuckas and Steven Thompson},
+      title = {Metallic Materials Properties Development and Standardization (MMPDS)},
+      institution = {U.S. Department of Transportation, Federal Aviation Administration},
+      year = {2001},
+    }
+  - |
+    @techreport{renishawTi64eli,
+      title = {Ti6Al4V {ELI}-0406 powder for additive manufacturing},
+      url = {https://www.renishaw.com/media/pdf/en/ada9ffdf8ade44dbb9adb06ff5a74bbf.pdf},
+      number = {H-5800-1086-04},
+      author = {{Renishaw plc}},
+      month = jun,
+      year = {2017},
+    }
+  - |
+    @techreport{eosTi64eli,
+      title = {Material {Data} {Sheet}: {EOS} {Titanium} {Ti}64 {ELI}},
+      url = {https://cdn.eos.info/d27ce4e4388315f2/8e16ddeb3a3e/EOS_Ti64ELI_9011-0017_9011-0040_M290_MDS_11-17_en.pdf},
+      author = {{EOS GmbH}},
+      month = nov,
+      year = {2017},
+    }
+
+
+elemental_composition:    # percent by mass, [min, max]
+  Ti: [88.073, 91.]
+  Al : [5.5, 6.5]
+  V: [3.5, 4.5]
+  Fe: [0, 0.25]
+  O: [0, 0.13]
+  C: [0, 0.08]
+  N: [0, 0.03]
+  H: [0, 0.012]
+  Y: [0, 0.005]
+  other: [0, 0.40]
+
+common_properties: &common_properties
+  density:
+    units: 'kg m^-3'
+    default_value: 4429. # 0.160 lbm/in^3
+    reference: mmpds01
+  poissons_ratio:
+    units: dimensionless
+    default_value: 0.31
+    reference: mmpds01
+  youngs_modulus:
+    units: GPa
+    default_value: 116.5   # 16.9 msi
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': 'kelvin'}
+        value_type: multiplier
+        representation: table
+        reference: 'mmpds01'
+        temperature: [21.9206, 34.2936, 61.0511, 89.3201, 115.7327, 144.1396, 172.0938, 200.0034,
+          227.3510, 254.6853, 298.6882, 333.1895, 367.1353, 421.6676, 477.8660, 532.4116,
+          589.7441, 644.8383, 701.0467, 722.1618, 745.4487, 768.1037, 789.8374, 801.5507,
+          811.0557]
+        values: [1.1773, 1.1494, 1.1061, 1.0726, 1.0507, 1.0386, 1.0360, 1.0314,
+          1.0263, 1.0191, 0.9972, 0.9749, 0.9531, 0.9175, 0.8804, 0.8469, 0.8123, 0.7773,
+          0.7417, 0.7232, 0.6949, 0.6553, 0.6027, 0.5560, 0.5135]
+
+
+common_state_variations:    # State variations that are common between forms or conditions.
+  annealed_strength_tensile_ultimate_thermal: &annealed_strength_tensile_ultimate_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: multiplier
+    representation: table
+    reference: 'mmpds01'
+    temperature: [24.1162, 33.1500, 44.2611, 55.3722, 66.4833, 77.5944, 88.7056, 99.8167,
+      110.9278, 122.0389, 133.1500, 144.2611, 155.3722, 166.4833, 177.5944, 188.7056,
+      199.8167, 210.9278, 222.0389, 233.1500, 244.2611, 255.3722, 266.4833, 277.5944,
+      288.7056, 299.8167, 310.9278, 322.0389, 333.1500, 344.2611, 355.3722, 366.4833,
+      377.5944, 388.7056, 399.8167, 410.9278, 422.0389, 433.1500, 444.2611, 455.3722,
+      466.4833, 477.5944, 488.7056, 499.8167, 510.9278, 522.0389, 533.1500, 544.2611,
+      555.3722, 566.4833, 577.5944, 588.7056, 599.8167, 610.9278, 622.0389, 633.1500,
+      644.2611, 655.3722, 666.4833, 677.5944, 688.7056, 699.8167, 710.9278, 722.0389,
+      733.1500, 744.2611, 755.3722, 766.4833, 777.5944, 788.7056, 799.8167, 808.5943]
+    values: [1.7863, 1.7413, 1.6902, 1.6407, 1.5939, 1.5468, 1.5064, 1.4654, 1.4284,
+      1.3946, 1.3609, 1.3285, 1.2981, 1.2697, 1.2406, 1.2101, 1.1821, 1.1571, 1.1349,
+      1.1127, 1.0915, 1.0717, 1.0514, 1.0328, 1.0138, 0.9961, 0.9781, 0.9614, 0.9460,
+      0.9333, 0.9175, 0.9048, 0.8919, 0.8789, 0.8652, 0.8519, 0.8390, 0.8265, 0.8136,
+      0.8037, 0.7898, 0.7774, 0.7664, 0.7563, 0.7464, 0.7376, 0.7324, 0.7263, 0.7219,
+      0.7171, 0.7149, 0.7124, 0.7095, 0.7050, 0.7022, 0.6963, 0.6921, 0.6878, 0.6825,
+      0.6761, 0.6689, 0.6619, 0.6520, 0.6424, 0.6308, 0.6186, 0.6045, 0.5870, 0.5663,
+      0.5458, 0.5243, 0.5074]
+  annealed_strength_tensile_yield_thermal: &annealed_strength_tensile_yield_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: multiplier
+    representation: table
+    reference: 'mmpds01'
+    temperature: [25.1327, 33.1500, 44.2611, 55.3722, 66.4833, 77.5944, 88.7056, 99.8167,
+      110.9278, 122.0389, 133.1500, 144.2611, 155.3722, 166.4833, 177.5944, 188.7056,
+      199.8167, 210.9278, 222.0389, 233.1500, 244.2611, 255.3722, 266.4833, 277.5944,
+      288.7056, 299.8167, 310.9278, 322.0389, 333.1500, 344.2611, 355.3722, 366.4833,
+      377.5944, 388.7056, 399.8167, 410.9278, 422.0389, 433.1500, 444.2611, 455.3722,
+      466.4833, 477.5944, 488.7056, 499.8167, 510.9278, 522.0389, 533.1500, 544.2611,
+      555.3722, 566.4833, 577.5944, 588.7056, 599.8167, 610.9278, 622.0389, 633.1500,
+      644.2611, 655.3722, 666.4833, 677.5944, 688.7056, 699.8167, 710.9278, 722.0389,
+      733.1500, 744.2611, 755.3722, 766.4833, 777.5944, 788.7056, 799.8167]
+    values: [1.8259, 1.7930, 1.7473, 1.7008, 1.6559, 1.6100, 1.5645, 1.5203, 1.4773, 1.4342,
+      1.3930, 1.3506, 1.3134, 1.2737, 1.2406, 1.2101, 1.1821, 1.1571, 1.1349, 1.1127,
+      1.0915, 1.0717, 1.0514, 1.0328, 1.0138, 0.9961, 0.9781, 0.9614, 0.9409, 0.9225,
+      0.9041, 0.8845, 0.8651, 0.8465, 0.8284, 0.8087, 0.7909, 0.7732, 0.7556, 0.7394,
+      0.7240, 0.7073, 0.6938, 0.6804, 0.6674, 0.6557, 0.6479, 0.6408, 0.6339, 0.6306,
+      0.6276, 0.6250, 0.6225, 0.6179, 0.6148, 0.6102, 0.6064, 0.6028, 0.5949, 0.5897,
+      0.5830, 0.5763, 0.5685, 0.5620, 0.5523, 0.5430, 0.5315, 0.5175, 0.5032, 0.4832,
+      0.4621]
+
+forms:
+  bar:
+    conditions:
+      annealed:
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 931.    # 135 ksi
+            basis: S
+            reference: mmpds01
+            variations_with_state:
+              thermal:
+                <<: *annealed_strength_tensile_ultimate_thermal
+          strength_tensile_yield:
+            units: MPa
+            default_value: 862.    # 125 ksi
+            basis: S
+            reference: mmpds01
+            variations_with_state:
+              thermal:
+                <<: *annealed_strength_tensile_yield_thermal
+  'additive, Renishaw':
+    conditions:
+      annealed:
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 1052  # weakest direction
+            basis: '(mean - 2*stddev)'
+            reference: renishawTi64eli
+          strength_tensile_yield:
+            units: MPa
+            default_value: 943  # weakest direction
+            basis: '(mean - 2*stddev)'
+            reference: renishawTi64eli
+          elongation:  # at break
+            units: percent
+            default_value: 16.
+            reference: eosTi64eli
+  'additive, EOS':
+    conditions:
+      annealed:
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 1055  # weakest direction
+            basis: 'mean'
+            reference: eosTi64eli
+          strength_tensile_yield:
+            units: MPa
+            default_value: 945  # weakest direction
+            basis: 'mean'
+            reference: eosTi64eli
+          elongation:  # at break
+            units: percent
+            default_value: 13.
+            reference: eosTi64eli

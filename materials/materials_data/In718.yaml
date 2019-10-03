@@ -1,0 +1,173 @@
+name: In718
+category: metal
+subcategory: nickel alloy
+uns_code: N07718
+
+references:    # In bibtex format
+  - |
+    @techreport{mmpds01,
+      author = {Richard C Rice and Jana L Jackson and John Bakuckas and Steven Thompson},
+      title = {Metallic Materials Properties Development and Standardization (MMPDS)},
+      institution = {U.S. Department of Transportation, Federal Aviation Administration},
+      year = {2001},
+    }
+  - |
+    @techreport{renishawIn718,
+      title = {In718-0405 powder for additive manufacturing},
+      url = {https://www.renishaw.com/media/pdf/en/b1296f200d6b415fa2c03bdc1da17f2a.pdf},
+      number = {H-5800-1052-03-B},
+      author = {{Renishaw plc}},
+      month = jul,
+      year = {2017},
+    }
+  - |
+    @techreport{eosIn718,
+      title = {Material {Data} {Sheet}: {EOS} {NickelAlloy} {IN}718},
+      url = {http://ip-saas-eos-cms.s3.amazonaws.com/public/4528b4a1bf688496/ff974161c2057e6df56db5b67f0f5595/EOS_NickelAlloy_IN718_en.pdf},
+      author = {{EOS GmbH}},
+      month = may,
+      year = {2014}
+    }
+
+elemental_composition:    # percent by mass, [min, max]
+  Ni: [50., 55.]
+  Cr: [17., 21.]
+  Fe: [11.08, 24.58]
+  'Nb+Ta': [4.75, 5.5]
+  Mo: [2.8, 3.3]
+  Ti: [0.65, 1.15]
+  Co: [0, 1.]
+  Al: [0.2, 0.8]
+  Mn: [0, 0.35]
+  Si: [0, 0.35]
+  Cu: [0, 0.30]
+  C: [0.02, 0.05]
+  N: [0, 0.03]
+  O: [0, 0.03]
+  P: [0, 0.015]
+  S: [0, 0.015]
+  Ca: [0, 0.01]
+  Mg: [0, 0.01]
+  Se: [0, 0.005]
+  B: [0, 0.005]
+
+common_properties: &common_properties
+  density:
+    units: 'kg m^-3'
+    default_value: 8221. # 0.297 lbm/in^3
+    reference: mmpds01
+  poissons_ratio:
+    units: dimensionless
+    default_value: 0.29
+    reference: mmpds01
+  youngs_modulus:
+    units: GPa
+    default_value: 203.   # 29.4 Mpsi
+    reference: mmpds01
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': 'kelvin'}
+        value_type: multiplier
+        representation: table
+        reference: 'mmpds01'
+        note: |
+          Data for dyanmic modulus. The reduction in dynamic modulus due to elevated
+          temperature may be significantly less thatn the rduction in static modulus.
+        temperature: [90.5507, 145.9500, 200.6228, 255.6637, 296.5882, 365.7726, 422.3096,
+          476.9926, 532.4287, 586.7503, 642.5579, 698.7438, 756.4088, 811.4972, 864.7179,
+          919.8299, 974.9420, 1030.4357, 1098.2494, 1143.3414, 1199.2913, 1256.0112, 1311.2757,
+          1366.5944]
+        values: [1.0545, 1.0403, 1.0287, 1.0178, 1.0066, 0.9906, 0.9777, 0.9641,
+          0.9486, 0.9330, 0.9175, 0.9006, 0.8851, 0.8650, 0.8467, 0.8220, 0.7972, 0.7705,
+          0.7321, 0.7052, 0.6620, 0.6135, 0.5591, 0.4942]
+
+common_state_variations:    # State variations that are common between forms or conditions.
+  sta_strength_tensile_ultimate_thermal: &sta_strength_tensile_ultimate_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: multiplier
+    representation: table
+    reference: 'mmpds01'
+    temperature: [30.7370, 84.1784, 142.4429, 195.2182, 251.4516, 300.8632, 363.3304,
+      421.7327, 476.0241, 530.3317, 586.6975, 641.6984, 694.6222, 758.5489, 806.6523,
+      861.5857, 890.3673, 919.8097, 953.2549, 979.7757, 1005.5222, 1031.2066, 1060.3518,
+      1084.1941]
+    values: [1.2086, 1.1593, 1.1118, 1.0676, 1.0277, 1.0012, 0.9714, 0.9562,
+      0.9448, 0.9371, 0.9282, 0.9218, 0.9123, 0.9021, 0.8913, 0.8692, 0.8439, 0.8123,
+      0.7516, 0.6802, 0.5887, 0.4826, 0.3815, 0.3272]
+  sta_strength_tensile_yield_thermal: &sta_strength_tensile_yield_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: multiplier
+    representation: table
+    reference: 'mmpds01'
+    temperature: [30.7370, 84.1784, 142.4429, 195.2182, 251.4516, 300.8632, 363.3304,
+      421.7327, 476.0241, 530.3317, 586.6975, 641.6984, 694.6222, 758.5489, 806.6523,
+      861.5857, 890.3673, 919.8097, 953.9941, 975.1309, 1005.0451, 1028.0429, 1061.2774,
+      1087.8522]
+    values: [1.2086, 1.1593, 1.1118, 1.0676, 1.0277, 1.0012, 0.9714, 0.9562,
+      0.9448, 0.9371, 0.9282, 0.9218, 0.9123, 0.9021, 0.8913, 0.8692, 0.8439, 0.8123,
+      0.7636, 0.7200, 0.6379, 0.5470, 0.4371, 0.3783]
+
+forms:
+  bar:
+    conditions:
+      'solution treated and aged':
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 1241.    # 180 ksi
+            basis: S
+            reference: mmpds01
+            variations_with_state:
+              thermal:
+                <<: *sta_strength_tensile_ultimate_thermal
+          strength_tensile_yield:
+            units: MPa
+            default_value: 1034.    # 150 ksi
+            basis: S
+            reference: mmpds01
+            variations_with_state:
+              thermal:
+                <<: *sta_strength_tensile_yield_thermal
+  'additive, Renishaw':
+    conditions:
+      'solution treated and aged':
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 1372.  # weakest direction
+            basis: '(mean - 2*stddev)'
+            reference: renishawTi64eli
+          strength_tensile_yield:
+            units: MPa
+            default_value: 1172.  # weakest direction
+            basis: '(mean - 2*stddev)'
+            reference: renishawIn718
+          elongation:  # at break
+            units: percent
+            default_value: 16.
+            reference: renishawIn718
+  'additive, EOS':
+    conditions:
+      'solution treated and aged':
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 1241  # weakest direction
+            basis: 'min'
+            reference: eosIn718
+          strength_tensile_yield:
+            units: MPa
+            default_value: 1034  # weakest direction
+            basis: 'min'
+            reference: eosIn718
+          elongation:  # at break
+            units: percent
+            default_value: 12.
+            basis: 'min'
+            reference: eosIn718
