@@ -74,6 +74,20 @@ class TestIn718(unittest.TestCase):
         print('\n' + str(in718_am_renishaw) + '\n')
         print('\n' + str(in718_am_eos) + '\n')
 
+
+class TestAlSi10Mg(unittest.TestCase):
+    """Unit tests for AlSi10Mg."""
+    def test_load(self):
+        """Make sure the material loads from the YAML file w/o throwing errors."""
+        # Action
+        alsi10mg_am_renishaw = load('AlSi10Mg', 'additive, Renishaw', 'stress relieved')
+
+        # Verificaiton
+        self.assertEqual(type(alsi10mg_am_renishaw), Material)
+        # TODO automate checking this
+        print('\n' + str(alsi10mg_am_renishaw) + '\n')
+
+
 class TestAl6061(unittest.TestCase):
     """Unit tests for Al 6061."""
 

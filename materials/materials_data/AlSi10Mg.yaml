@@ -1,0 +1,129 @@
+name: AlSi10Mg
+category: metal
+subcategory: Aluminum alloy
+
+references:
+  - |
+    @article{uzan_2018,
+      title = {High-temperature mechanical properties of {AlSi}10Mg specimens fabricated by additive manufacturing using selective laser melting technologies ({AM}-{SLM})},
+      volume = {24},
+      url = {http://www.sciencedirect.com/science/article/pii/S2214860418302148},
+      doi = {10.1016/j.addma.2018.09.033},
+      journaltitle = {Additive Manufacturing},
+      author = {Uzan, Naor Elad and Shneck, Roni and Yeheskel, Ori and Frage, Nachum},
+      date = {2018-12-01},
+    }
+  - |
+    @report{renishaw_alsi10mg,
+      title = {{AlSi}10Mg-0403 powder for additive manufacturing},
+      url = {https://www.renishaw.com/media/pdf/en/0c48b4800c17480393f17ceaacb4ecdb.pdf},
+      number = {H-5800-1084-01-B},
+      author = {{Renishaw plc}},
+      date = {2015-07},
+    }
+  - | # This is for Al 360, a casting alloy of similar composition
+    @online{matweb_Al360,
+      title = {Aluminum 360.0-F Die Casting Alloy},
+      url = {http://www.matweb.com/search/datasheet.aspx?matguid=46cc3a20683748718693cbb6039bec68&ckck=1},
+      author = {{MatWeb, LLC}},
+      urldate = {2019-11-02},
+      file = {Aluminum 360.0-F Die Casting Alloy:C\:\\Users\\User\\Zotero\\storage\\W4Y8QFA7\\datasheet.html:text/html}
+    }
+
+elemental_composition:    # percent by mass, [min, max]
+  Al: [87.86, 90.75]
+  Si: [9.00, 11.00]
+  Mg: [0.25, 0.45]
+  Fe: [0, 0.25]
+  N: [0, 0.20]
+  O: [0, 0.20]
+  Ti: [0, 0.15]
+  Zn: [0, 0.10]
+  Mn: [0, 0.10]
+  Ni: [0, 0.05]
+  Cu: [0, 0.05]
+  Pb: [0, 0.02]
+  Sn: [0, 0.02]
+
+
+common_properties: &common_properties
+  density:
+    units: 'kg m^-3'
+    default_value: 2680.
+    reference: renishaw_alsi10mg
+  poissons_ratio:
+    units: dimensionless
+    default_value: 0.33
+    reference: matweb_Al360
+  youngs_modulus:
+    units: GPa
+    default_value: 77.6
+    reference: uzan_2018
+    variations_with_state:
+      thermal:
+        state_vars: ['temperature']
+        state_vars_units: {'temperature': 'kelvin'}
+        value_type: override
+        representation: table
+        reference: uzan_2018
+        temperature: [298., 323., 373.]
+        values: [77.6, 75.5, 72.8]
+
+common_state_variations:    # State variations that are common between forms or conditions.
+  sr_strength_tensile_ultimate_thermal: &sr_strength_tensile_ultimate_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: override
+    units: MPa
+    representation: table
+    reference: uzan_2018
+    temperature: [298., 323., 373., 423., 473., 523., 573., 623., 673.]
+    values: [358., 341., 286., 241., 189., 149., 73., 33., 14.]
+  sr_strength_tensile_yield_thermal: &sr_strength_tensile_yield_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: override
+    units: MPa
+    representation: table
+    reference: uzan_2018
+    temperature: [298., 323., 373., 423., 473., 523., 573., 623., 673.]
+    values: [204., 198., 181., 182., 158., 132., 70., 30., 12.]
+  sr_elongation_thermal: &sr_elongation_thermal
+    state_vars: ['temperature']
+    state_vars_units: {'temperature': 'kelvin'}
+    value_type: override
+    units: percent
+    representation: table
+    reference: uzan_2018
+    temperature: [298., 323., 373., 423., 473., 523., 573., 623., 673.]
+    values: [7.2, 8.5, 10.0, 14.7, 16.4, 30.9, 41.4, 53.8, 57.4]
+
+forms:
+  'additive, Renishaw':
+    conditions:
+      'stress relieved':
+        properties:
+          <<: *common_properties
+          strength_tensile_ultimate:
+            units: MPa
+            default_value: 357  # weakest direction
+            basis: '(mean - 2*stddev)'
+            reference: renishaw_alsi10mg
+            variations_with_state:
+              thermal:
+                <<: *sr_strength_tensile_ultimate_thermal
+          strength_tensile_yield:
+            units: MPa
+            default_value: 230  # weakest direction
+            basis: '(mean - 2*stddev)'
+            reference: renishaw_alsi10mg
+            variations_with_state:
+              thermal:
+                <<: *sr_strength_tensile_yield_thermal
+          elongation:  # at break
+            units: percent
+            default_value: 5.
+            reference: renishaw_alsi10mg
+            variations_with_state:
+              thermal:
+                <<: *sr_elongation_thermal
