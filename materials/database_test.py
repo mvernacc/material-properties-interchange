@@ -102,5 +102,32 @@ class TestAl6061(unittest.TestCase):
         print('\n' + str(al6061) + '\n')
 
 
+class TestD6AC(unittest.TestCase):
+    """Unit tests for steel D6AC."""
+
+    def test_load(self):
+        """Make sure the material loads from the YAML file w/o throwing errors."""
+        # Action
+        d6ac = load('D6AC', 'bar, forging, tubing', 'tempered to 220 ksi')
+
+        # Verificaiton
+        self.assertEqual(type(d6ac), Material)
+        # TODO automate checking this
+        print('\n' + str(d6ac) + '\n')
+
+
+class TestAISI4130(unittest.TestCase):
+    """Unit tests for steel AISI 4130."""
+
+    def test_load(self):
+        """Make sure the material loads from the YAML file w/o throwing errors."""
+        # Action
+        aisi4130 = load('AISI_4130', 'tubing', 'normalized, HT-95')
+
+        # Verificaiton
+        self.assertEqual(type(aisi4130), Material)
+        # TODO automate checking this
+        print('\n' + str(aisi4130) + '\n')
+
 if __name__ == '__main__':
     unittest.main()
